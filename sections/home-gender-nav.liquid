@@ -1,0 +1,140 @@
+{% comment %}
+  SECCIÓN: Home Gender Nav
+  Archivo: sections/home-gender-nav.liquid
+  Descripción: Segmento Hombre/Mujer/Kids/Sale, pegado (sticky) bajo el header en la Home.
+{% endcomment %}
+
+<style>
+  .home-gender-nav {
+    position: sticky;
+    top: var(--header-height, 0px);
+    z-index: 30;
+    background-color: {{ section.settings.bg_color }};
+    border-bottom: 1px solid rgba(0,0,0,.07);
+  }
+
+  .home-gender-nav__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    gap: 22px;
+    padding: 0 18px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .home-gender-nav__inner::-webkit-scrollbar { display: none; }
+
+  .home-gender-nav__item {
+    flex: none;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: {{ section.settings.text_color }};
+    padding: 12px 0;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+  }
+
+  .home-gender-nav__item--active {
+    color: {{ section.settings.active_color }};
+    border-bottom-color: {{ section.settings.active_color }};
+  }
+
+  .home-gender-nav__item--accent {
+    color: {{ section.settings.accent_color }};
+    margin-left: auto;
+  }
+</style>
+
+<nav class="home-gender-nav" id="home-gender-nav-{{ section.id }}" aria-label="{{ section.settings.heading | default: 'Categorías' }}">
+  <div class="home-gender-nav__inner">
+    {% for block in section.blocks %}
+      {% assign extra_class = '' %}
+      {% if block.settings.active %}
+        {% assign extra_class = 'home-gender-nav__item--active' %}
+      {% elsif block.settings.accent %}
+        {% assign extra_class = 'home-gender-nav__item--accent' %}
+      {% endif %}
+      <a href="{{ block.settings.url }}" class="home-gender-nav__item {{ extra_class }}" {{ block.shopify_attributes }}>
+        {{ block.settings.label }}
+      </a>
+    {% endfor %}
+  </div>
+</nav>
+
+{% schema %}
+{
+  "name": "Home · Segmento género",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Color de fondo",
+      "default": "#f6f4f0"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color de texto (inactivo)",
+      "default": "#8a8578"
+    },
+    {
+      "type": "color",
+      "id": "active_color",
+      "label": "Color de texto (activo)",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Color acento (ej. Sale)",
+      "default": "#9c2b23"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Ítem",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Texto",
+          "default": "Hombre"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link"
+        },
+        {
+          "type": "checkbox",
+          "id": "active",
+          "label": "Marcar como activo (subrayado)",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "accent",
+          "label": "Usar color acento (ej. Sale)",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Home · Segmento género",
+      "blocks": [
+        { "type": "item", "settings": { "label": "Hombre", "url": "/collections/hombre", "active": true } },
+        { "type": "item", "settings": { "label": "Mujer", "url": "/collections/mujer" } },
+        { "type": "item", "settings": { "label": "Kids", "url": "/collections/kids" } },
+        { "type": "item", "settings": { "label": "Sale", "url": "/collections/seccion-sale", "accent": true } }
+      ]
+    }
+  ]
+}
+{% endschema %}

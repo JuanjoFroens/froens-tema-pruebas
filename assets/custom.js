@@ -71,10 +71,41 @@
 document.addEventListener('DOMContentLoaded', function() {
   const searchBarResults = document.querySelector('#search-bar-results');
   const searchBarReset = document.querySelector('.search-bar .search-reset');
-  
+
   if (searchBarReset && searchBarResults) {
     searchBarReset.addEventListener('click', function() {
       searchBarResults.innerHTML = '';
     });
   }
+});
+
+// Carro (drawer) rediseñado, jul-2026: barra de progreso de envío gratis en vivo.
+// Mantiene el ancho de [data-freeship-fill] y el mensaje sincronizados con el total real
+// del carro en cada cambio (agregar/quitar/actualizar cantidad), sin depender del wheel
+// original (que solo anima un stroke-dashoffset de SVG, no un ancho de div).
+document.addEventListener('theme:cart:change', function(event) {
+  var cart = event.detail.cart;
+  if (!cart) return;
+
+  document.querySelectorAll('[data-freeship-bar]').forEach(function(bar) {
+    var limit = Number(bar.getAttribute('data-limit')) * 100;
+    if (!limit) return;
+
+    var total = cart.total_price;
+    var pct = Math.min(100, Math.max(0, (total / limit) * 100));
+
+    var fill = bar.querySelector('[data-freeship-fill]');
+    if (fill) fill.style.width = pct + '%';
+
+    var msg = bar.querySelector('[data-freeship-msg]');
+    if (msg) {
+      if (total >= limit && total > 0) {
+        msg.textContent = '¡Tienes envío gratis a todo Chile!';
+      } else {
+        var left = (limit - total) / 100;
+        var formatted = '$' + Math.round(left).toLocaleString('es-CL');
+        msg.innerHTML = 'Te faltan <b>' + formatted + '</b> para envío gratis';
+      }
+    }
+  });
 });

@@ -1,0 +1,146 @@
+{% comment %}
+  SECCIÓN: Home Category Chips
+  Archivo: sections/home-category-chips.liquid
+  Descripción: Chips de categorías en scroll horizontal (mobile-first), bajo el hero de la Home.
+{% endcomment %}
+
+<style>
+  .home-chips {
+    background-color: {{ section.settings.bg_color }};
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+  }
+
+  .home-chips__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 0 18px 4px;
+    scrollbar-width: none;
+  }
+  .home-chips__inner::-webkit-scrollbar { display: none; }
+
+  .home-chips__item {
+    flex: none;
+    display: inline-block;
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: .06em;
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(0,0,0,.14);
+    color: {{ section.settings.text_color }};
+    background: #fff;
+  }
+
+  .home-chips__item--featured {
+    background-color: {{ section.settings.featured_bg }};
+    color: {{ section.settings.featured_text }};
+    border-color: {{ section.settings.featured_bg }};
+    font-weight: 600;
+  }
+</style>
+
+<div class="home-chips" id="home-chips-{{ section.id }}">
+  <div class="home-chips__inner">
+    {% for block in section.blocks %}
+      <a href="{{ block.settings.url }}"
+        class="home-chips__item {% if block.settings.featured %}home-chips__item--featured{% endif %}"
+        {{ block.shopify_attributes }}>
+        {{ block.settings.label }}
+      </a>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Home · Chips categorías",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Color de fondo de la sección",
+      "default": "#f6f4f0"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color de texto (chip normal)",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "featured_bg",
+      "label": "Fondo chip destacado",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "featured_text",
+      "label": "Texto chip destacado",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Espacio superior",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Espacio inferior",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 6
+    }
+  ],
+  "blocks": [
+    {
+      "type": "chip",
+      "name": "Chip",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Texto",
+          "default": "Categoría"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link (colección)"
+        },
+        {
+          "type": "checkbox",
+          "id": "featured",
+          "label": "Destacado (fondo oscuro)",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Home · Chips categorías",
+      "blocks": [
+        { "type": "chip", "settings": { "label": "Chaquetas", "url": "/collections/chaquetas-y-parkas-hombre", "featured": true } },
+        { "type": "chip", "settings": { "label": "Polerones y polar", "url": "/collections/poleron-hombre-froens" } },
+        { "type": "chip", "settings": { "label": "Poleras", "url": "/collections/poleras-hombre-froens" } },
+        { "type": "chip", "settings": { "label": "Pantalones", "url": "/collections/pantalon-hombre-froens" } },
+        { "type": "chip", "settings": { "label": "Camisas", "url": "/collections/camisa-hombre-froens" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

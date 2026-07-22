@@ -6,6 +6,97 @@
   {% render 'cart-drawer', cart: cart %}
 {% endcomment %}
 
+<style>
+  .cart-freeship {
+    margin: 0 0 14px;
+    background: #eef1ea;
+    border: 1px solid #d5dccb;
+    border-radius: 8px;
+    padding: 11px 14px;
+  }
+  .cart-freeship__msg {
+    font-size: 12px;
+    color: #3c5a2e;
+    margin: 0 0 7px;
+  }
+  .cart-freeship__track {
+    height: 4px;
+    background: #d8ddd0;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .cart-freeship__fill {
+    height: 100%;
+    background: #4a6b38;
+    border-radius: 99px;
+    transition: width .3s ease;
+  }
+
+  .cart-delivery { padding: 16px 0 4px; }
+  .cart-delivery__label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    color: #6b675d;
+    margin: 0 0 9px;
+  }
+  .cart-delivery__options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .cart-delivery__option {
+    display: block;
+    border: 1px solid rgba(0,0,0,.14);
+    border-radius: 8px;
+    padding: 11px 10px;
+    text-align: center;
+    cursor: pointer;
+  }
+  .cart-delivery__option:has(input:checked) {
+    border: 1.5px solid #1a1a1a;
+  }
+  .cart-delivery__option input { position: absolute; opacity: 0; width: 0; height: 0; }
+  .cart-delivery__option-text { display: block; }
+  .cart-delivery__option-title {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: #1a1a1a;
+    line-height: 1.25;
+  }
+  .cart-delivery__option:has(input:checked) .cart-delivery__option-title { font-weight: 600; }
+  .cart-delivery__option-sub {
+    display: block;
+    font-size: 9.5px;
+    color: #7a766b;
+    margin-top: 3px;
+  }
+
+  .cart-upsell { padding: 18px 0 14px; }
+  .cart-upsell__label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    color: #6b675d;
+    margin: 0 0 10px;
+  }
+  .cart-upsell__track {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+  }
+  .cart-upsell__track:empty { display: none; }
+  .cart-upsell__track > .quickview {
+    flex: none;
+    width: 190px;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.08);
+    border-radius: 8px;
+    padding: 8px;
+  }
+</style>
+
 {%- liquid
   assign hide_quantity = 'quantity--hide'
   if section.settings.cart_show_quantity
@@ -49,8 +140,30 @@
               </div>
             {% endif %}
 
-            {%- if section.settings.show_free_shipping_message -%}
-              {% render 'cart-shipping-message', message: section.settings.message, show_wheel: true %}
+            {%- if section.settings.show_free_shipping_bar -%}
+              {%- liquid
+                assign fs_limit_cents = settings.free_shipping_limit | times: 100
+                assign fs_percent = 0
+                if fs_limit_cents > 0
+                  assign fs_percent = cart.total_price | times: 100 | divided_by: fs_limit_cents
+                endif
+                if fs_percent > 100
+                  assign fs_percent = 100
+                endif
+                assign fs_left = fs_limit_cents | minus: cart.total_price
+              -%}
+              <div class="cart-freeship" data-freeship-bar data-limit="{{ settings.free_shipping_limit }}" data-cart-message-container>
+                <p class="cart-freeship__msg" data-freeship-msg>
+                  {%- if cart.total_price >= fs_limit_cents and cart.total_price > 0 -%}
+                    ¡Tienes envío gratis a todo Chile!
+                  {%- else -%}
+                    Te faltan <b>{{ fs_left | money }}</b> para envío gratis
+                  {%- endif -%}
+                </p>
+                <div class="cart-freeship__track">
+                  <div class="cart-freeship__fill" data-freeship-fill style="width:{{ fs_percent }}%"></div>
+                </div>
+              </div>
             {%- endif -%}
 
             <div class="errors" data-form-errors style="display: none;"></div>
@@ -76,6 +189,40 @@
                   </div>
                 </div>
               </div>
+
+              {%- if section.settings.show_delivery_method -%}
+                <div class="cart-delivery">
+                  <p class="cart-delivery__label">¿CÓMO LO QUIERES?</p>
+                  <div class="cart-delivery__options">
+                    <label class="cart-delivery__option">
+                      <input type="radio" name="attributes[Método de entrega]" value="Retiro en tienda" form="cart-form"
+                        {% unless cart.attributes['Método de entrega'] == 'Envío a domicilio' %}checked{% endunless %}>
+                      <span class="cart-delivery__option-text">
+                        <span class="cart-delivery__option-title">Retiro en tienda</span>
+                        <span class="cart-delivery__option-sub">gratis · retira el mismo día</span>
+                      </span>
+                    </label>
+                    <label class="cart-delivery__option">
+                      <input type="radio" name="attributes[Método de entrega]" value="Envío a domicilio" form="cart-form"
+                        {% if cart.attributes['Método de entrega'] == 'Envío a domicilio' %}checked{% endif %}>
+                      <span class="cart-delivery__option-text">
+                        <span class="cart-delivery__option-title">Envío a domicilio</span>
+                        <span class="cart-delivery__option-sub">24–72 h</span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              {%- endif -%}
+
+              {%- if section.settings.show_upsell and cart.item_count > 0 -%}
+                <div class="cart-upsell">
+                  <p class="cart-upsell__label">COMPLETA TU LOOK</p>
+                  <product-complimentary
+                    class="cart-upsell__track"
+                    data-url="{{ routes.product_recommendations_url }}?section_id=api-product-upsell-item&product_id={{ cart.items.first.product_id }}&limit=6&intent=complementary">
+                  </product-complimentary>
+                </div>
+              {%- endif -%}
             </div>
           </div>
           <div class="drawer__bottom cart--hidden" data-cart-bottom data-accordion-group>
@@ -157,7 +304,31 @@
 		},
 		{
 			"type": "header",
-			"content": "Free shipping message"
+			"content": "Rediseño Home móvil (jul-2026)"
+		},
+		{
+			"type": "checkbox",
+			"id": "show_free_shipping_bar",
+			"label": "Mostrar barra de progreso envío gratis",
+			"default": true
+		},
+		{
+			"type": "checkbox",
+			"id": "show_delivery_method",
+			"label": "Mostrar selector de retiro/despacho",
+			"info": "Guarda la elección como atributo del carro (\"Método de entrega\"), visible en el pedido.",
+			"default": true
+		},
+		{
+			"type": "checkbox",
+			"id": "show_upsell",
+			"label": "Mostrar 'Completa tu look' (recomendaciones)",
+			"info": "Usa el motor de recomendaciones de Shopify a partir del primer producto del carro.",
+			"default": true
+		},
+		{
+			"type": "header",
+			"content": "Free shipping message (wheel — legacy)"
 		},
 		{
 			"type": "checkbox",
