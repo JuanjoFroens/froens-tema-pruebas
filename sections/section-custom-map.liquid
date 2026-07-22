@@ -1,0 +1,401 @@
+<!-- /sections/section-custom-map.liquid -->
+
+<style>
+  :root {
+    --BRICK-GUTTER: 18px;
+  }
+  
+  .col-tiendas {height:700px;padding:0 10px;}
+  .col-tiendas .filtros {width: 100%;margin: 5px 0;display: flex;justify-content: space-between;align-items: center;}
+  .col-tiendas .filtros .btn-filtro {border: 1px solid #2f4937;border-radius:5px;padding: 8px 20px;}
+  .col-tiendas .filtros .btn-filtro:hover {color:#FFFFFF;background-color:#3F4937;} 
+  .col-tiendas .filtros .btn-filtro.activo {color: #FFFFFF;background-color: #3F4937;} 
+  .col-tiendas .filtros .btn-filtro.activo:hover{opacity:.7;}
+
+  .col-tiendas .listado {overflow-y:auto;height: 650px;margin-top: 1rem;}
+  .col-tiendas .tienda {display: flex;flex-wrap: wrap;align-items: center;justify-content: space-between;gap: 5px;margin:10px; font-size:16px; padding:10px;border-bottom:1px solid #f3f3f3;border-top:1px solid transparent;border-left:1px solid transparent;border-right:1px solid transparent;cursor:pointer;}
+  .col-tiendas .tienda:hover {border-radius:5px; border:1px solid #3f3f3f;}
+  .col-tiendas .tienda.activa {border-radius:5px; border:1px solid #3f3f3f;color:#ffffff; background-color: #3f3f3f;}
+  .col-tiendas .tienda .titulo {width:100%;font-size:1em; font-weight:600;text-transform:capitalize;}
+  .col-tiendas .tienda .detalle {display: flex;align-items: center;justify-content: space-between;flex-direction: row;gap: 5px;width:100%;}
+  .col-tiendas .tienda .direccion, .col-tiendas .tienda .horario {font-size:0.8em;margin-bottom:5px;}
+  .col-tiendas .tienda .direccion span, .col-tiendas .tienda .horario span {font-weight:600;}
+  .col-tiendas .tienda img {width:100%; max-width: 150px; height:auto;border-radius:3px;}
+  .col-mapa {}
+  #map {background-color: #f3f3f3; width:100%!important; height:700px!important;}
+  
+
+  @media only screen and (max-width: 500px) {
+    .col-tiendas .tienda .detalle {flex-direction:column;}
+    .col-tiendas .tienda img {max-width: unset;}
+  }  
+  @media only screen and (min-width: 768px) and (max-width:1100px) {
+    .col-tiendas .tienda .detalle {flex-direction:column;}
+    .col-tiendas .tienda img {max-width: unset;}
+  }  
+  @media only screen and (max-width: 767px) {
+    .col-tiendas {max-height:500px;}
+    .col-tiendas .listado {max-height:400px;}
+  } 
+
+  /* HTML marker styles */
+  .tienda-tag {
+    background-color: #FFFFFF;
+    border:1px solid #3F3F3F;
+    border-radius: 8px;
+    color: #3F3F3F;
+    font-size: 14px;
+    padding: 10px 15px;
+    position: relative;
+    width: 100%;
+    max-width: 280px;
+  }
+  
+  .tienda-tag::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    transform: translate(-50%, 0);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #3F3F3F;
+  }
+</style>
+
+{%- liquid
+  assign display_map = false
+
+  if section.settings.api_key_alternative != blank
+    assign display_map = true
+  endif
+-%}
+
+
+<div id="mapaPrincipal" class="map-section section-padding"
+     data-section-id="{{ section.id }}"
+     data-section-type="section-map"
+     data-api-key-alternative="{{ section.settings.api_key_alternative }}"
+     style="--PT: {{ section.settings.padding_top }}px;
+            --PB: {{ section.settings.padding_bottom }}px;visibility:hidden;">
+  <div class="{{ section.settings.width }}">
+    <div class="brick__section brick--2 brick--margin" data-overflow-wrapper>
+        <div class="brick__block col-tiendas">
+          <div class="filtros">
+            <button id="tiendas-default" data-id="" class="btn-filtro activo">Todas las tiendas</button>
+            <button id="region-metropolitana" data-id="" class="btn-filtro">Región Metropolitana</button>
+            <button id="region-otros" data-id="" class="btn-filtro">Otras Regiones</button>
+          </div>
+          <div class="buscar">
+            <input type="text" onchange="buscarDireccion(this.value)" oninput="buscarDireccion(this.value)" value="" class="amlocator-text pac-target-input" name="address" placeholder="Buscar..." data-amlocator-js="address" autocomplete="off">
+          </div>
+          <div class="listado"></div>
+          
+        </div>
+
+      <div class="brick__block col-mapa" data-overflow-frame>
+        {% if display_map %}
+          <div id="map" class="map-section__container" data-map-container data-overflow-background></div>
+        {% else %}          
+          <p>Debe configurar Google Maps API key</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script async src="https://maps.googleapis.com/maps/api/js?key={{ section.settings.api_key_alternative }}&callback=initMap&libraries=marker&v=beta"></script>
+<script>
+  var map;
+  
+function mostrarTiendas() {
+  document.getElementById("mapaPrincipal").style.visibility="visible";
+}
+
+  async function initMap() {
+    // Request needed libraries.
+    const { Map } = await google.maps.importLibrary("maps");
+    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+    
+    const center = { lat: -33.39860, lng: -70.59808 };
+    map=new google.maps.Map(document.getElementById("map"), {
+      center,
+      zoom: 16,
+      mapId: "{{ section.settings.api_key_alternative }}",
+    });
+
+    var contenido;
+    for (const tienda of tiendas) {
+      contenido = document.createElement("div");
+      contenido.className = "tienda-tag";
+      contenido.textContent = "";
+      contenido.innerHTML = `<strong>${tienda.titulo}</strong><br><br><strong>Dirección:</strong> ${tienda.direccion} <br><br> <strong>Horarios:</strong> ${tienda.horario}`;
+
+      var marker = new AdvancedMarkerElement({
+        map,
+        position: { lat: tienda.position.lat, lng: tienda.position.lng },
+        title: tienda.titulo,
+        content: contenido,
+      });
+    }
+
+    mostrarTiendas();
+  }
+  const tiendas = [
+     {% for block in section.blocks %}
+       {
+          titulo: "{{ block.settings.titulo }}",
+          direccion: '{{ block.settings.direccion | strip_newlines }}',
+          region: {{ block.settings.region }},
+          horario: "{{ block.settings.horario | strip_newlines }}",
+          position: {
+            lat: {{ block.settings.latitud }},
+            lng: {{ block.settings.longitud }},
+          },
+        img_url: "{{ block.settings.imagen | image_url}}"
+      },
+    {% endfor %}
+  ];
+
+  var buscar = "";
+  function buscarDireccion(nuevaBusqueda) {
+    buscar = nuevaBusqueda;
+    $(".tienda").show();
+    let coincidencesToHide = $(".tienda").filter( (index, element) => !element?.dataset.name.toLowerCase().includes(buscar.toLowerCase()) && !element?.dataset.direction.toLowerCase().includes(buscar.toLowerCase()))
+    coincidencesToHide.hide();
+  }
+
+  function cargarListado(opcion) {
+    var html='';
+    let filtro=13;
+    let opcionParam=opcion;
+
+    $('.col-tiendas .listado').empty();
+    for (const tienda of tiendas) {
+      var activa='';
+      var imagenTienda='';
+      var nombre=tienda.titulo;
+      var direccion=tienda.direccion;
+      var horario=tienda.horario;
+      var latitud=parseFloat(tienda.position.lat);
+      var longitud=parseFloat(tienda.position.lng);
+      var regionTienda=tienda.region;
+
+      // Validacion numerica
+      if(isNaN(latitud)) latitud=0;
+      if(isNaN(longitud)) longitud=0;
+
+      // Limpieza textos
+      nombre=nombre.replace("\n"," ");
+      direccion=direccion.replace("\n"," ");
+      horario=horario.replace("\n"," ");
+      
+      if(opcionParam=='rm' && regionTienda!=filtro) {
+        continue;
+      }
+      if(opcionParam=='otros' && regionTienda==filtro) {
+        continue;
+      }
+      if(opcionParam=='rm' || opcionParam=='todos' ) {
+        $('*[data-name="Froens Casa Costanera"]').trigger("click");
+      } else {
+        $('*[data-name="Froens Viña del Mar"]').trigger("click");
+      }
+
+      
+      if(tienda.img_url!=='') imagenTienda=`<img src='${tienda.img_url}' alt='foto tienda' width='150' height='150'>`;
+      html=`
+        <div class="tienda ${activa}" data-lat="${latitud}" data-lng="${longitud}" data-name="${nombre}" data-direction="${direccion}">
+          <h2 class="titulo">${nombre}</h2>
+          <div class="detalle" >
+            <div>
+              <p class="direccion"><span>Dirección</span>: ${direccion}</p>
+              <p class="horario"><span>Horario</span>: ${horario}</p>
+            </div>
+            ${imagenTienda}
+          </div>
+        </div>
+      `;
+
+      $('.col-tiendas .listado').append(html);
+
+      $('.col-tiendas .listado > .tienda').on('click', function() {
+              console.log("click");
+              let dataLat=0;
+              let dataLng=0;
+
+              if($(this).data("lat")!='') dataLat=$(this).data("lat");
+              if($(this).data("lng")!='') dataLng=$(this).data("lng");
+              
+              // TODO: Revisar, no está definido aún map cuando esto se llama
+              if(window.map) {
+                window.map.setCenter({lat: dataLat, lng: dataLng });
+              }
+
+              $('.col-tiendas .listado .tienda').each(function(idx,elem) { $(elem).removeClass('activa'); });
+              $(this).addClass('activa');
+            });
+    }
+  }
+
+  defer(function () {
+    /* console.log("jQuery is now loaded"); */
+  });
+  
+  function defer(method) {
+        if (window.jQuery) {
+          $(function() {
+            // Ajustamos alto y ancho
+            altura=$('.col-mapa').height();
+            ancho=$('.col-mapa').width();
+            //$('#map').css('height',altura);
+            $('#map').css('width',ancho);
+
+            cargarListado('todos');
+            
+            $('#tiendas-default').on('click', function() {
+              $('.buscar input').val('');
+              cargarListado('todos');
+              $('.col-tiendas .filtros .btn-filtro').each(function(idx,elem) { $(elem).removeClass('activo'); });
+              $(this).addClass('activo');
+            });
+            $('#region-metropolitana').on('click', function() {
+              $('.buscar input').val('');
+              cargarListado('rm');
+              $('.col-tiendas .filtros .btn-filtro').each(function(idx,elem) { $(elem).removeClass('activo'); });
+              $(this).addClass('activo');
+            });
+            $('#region-otros').on('click', function() {
+              $('.buscar input').val('');
+              cargarListado('otros');
+              $('.col-tiendas .filtros .btn-filtro').each(function(idx,elem) { $(elem).removeClass('activo'); });
+              $(this).addClass('activo');
+            });
+
+          });
+
+        } else {
+            setTimeout(function () { defer(method) }, 50);
+        }
+    }
+  
+</script>
+{% schema %}
+  {
+    "name": "Las Tiendas",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Map"
+      },
+      {
+        "id": "api_key_alternative",
+        "type": "text",
+        "label": "Google Maps API key",
+        "info": "You’ll need to [register a Google Maps API Key](https://help.shopify.com/manual/using-themes/troubleshooting/map-section-api-key) to display the map"
+      },  
+      
+      {
+        "type": "header",
+        "content": "Section spacing"
+      },
+      {
+        "type": "select",
+        "id": "width",
+        "label": "Width",
+        "default": "wrapper--none",
+        "options": [
+          { "value": "wrapper--none", "label": "Full width" },
+          { "value": "wrapper--full", "label": "Full width padded" },
+          { "value": "wrapper", "label": "Page width" }
+        ]
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 180,
+        "step": 2,
+        "unit": "px",
+        "label": "Padding top",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "min": 0,
+        "max": 180,
+        "step": 2,
+        "unit": "px",
+        "label": "Padding bottom",
+        "default": 0
+      }
+    ],
+    "blocks": [
+      {
+      "name": "Tienda",
+      "type": "image",
+      "settings": [
+        {
+          "type": "text",
+          "id": "titulo",
+          "label": "Nombre:",
+          "default": "Nombre de la tienda"
+        },
+        {
+          "type": "textarea",
+          "id": "direccion",
+          "label": "Dirección:",
+          "default": "Coloque una direccion",
+          "info": "El campo no acepta saltos de línea (enter)"
+        },
+        {
+          "type": "range",
+          "id": "region",
+          "min": 1,
+          "max": 16,
+          "step": 1,
+          "label": "Número de la región",
+          "default": 13
+        },
+        {
+          "type": "text",
+          "id": "latitud",
+          "label": "Latitud (DD) (obligatorio):",
+          "default": "0"
+          
+        },
+        {
+          "type": "text",
+          "id": "longitud",
+          "label": "Longitud (DD) (obligatorio):",
+          "default": "0"
+        },
+        {
+          "type": "textarea",
+          "id": "horario",
+          "label": "Horario:", 
+          "default": "Coloque un horario",
+          "info": "El campo no acepta saltos de línea (enter)"
+        },
+        {
+          "type": "image_picker",
+          "id": "imagen",
+          "label": "Imagen:"
+        },
+      ]
+    }
+  ],
+    "presets": [
+      {
+        "name": "Custom Map",
+        "category": "Image"
+      }
+    ],
+    "disabled_on": {
+      "groups": ["header","footer","aside"]
+    }
+  }
+{% endschema %}

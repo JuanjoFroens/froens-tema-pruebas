@@ -1,0 +1,233 @@
+{% comment %}
+  SECCIÓN: Cyber Hero
+  Archivo: sections/cyber-hero.liquid
+  Descripción: Hero principal de la landing page Cyber Day Froens
+{% endcomment %}
+
+<style>
+  .cyber-hero {
+    background-color: {{ section.settings.bg_color }};
+    min-height: {{ section.settings.height }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cyber-hero__inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .cyber-hero__kicker {
+    display: inline-block;
+    border: 1px solid rgba(255,255,255,0.4);
+    color: rgba(255,255,255,0.8);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    font-family: inherit;
+  }
+
+  .cyber-hero__title {
+    color: {{ section.settings.text_color }};
+    font-size: clamp(32px, 5vw, 64px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .cyber-hero__subtitle {
+    color: rgba(255,255,255,0.85);
+    font-size: clamp(16px, 2vw, 20px);
+    line-height: 1.5;
+    max-width: 680px;
+    margin: 0;
+  }
+
+  .cyber-hero__body {
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+    line-height: 1.7;
+    max-width: 620px;
+    margin: 0;
+  }
+
+  .cyber-hero__buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 8px;
+  }
+
+  .cyber-hero__btn {
+    display: inline-block;
+    padding: 14px 32px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 2px solid #ffffff;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .cyber-hero__btn--primary {
+    background-color: #ffffff;
+    color: #000000;
+  }
+
+  .cyber-hero__btn--primary:hover {
+    background-color: transparent;
+    color: #ffffff;
+  }
+
+  .cyber-hero__btn--secondary {
+    background-color: transparent;
+    color: #ffffff;
+  }
+
+  .cyber-hero__btn--secondary:hover {
+    background-color: #ffffff;
+    color: #000000;
+  }
+
+  @media (max-width: 640px) {
+    .cyber-hero__buttons {
+      flex-direction: column;
+      width: 100%;
+    }
+    .cyber-hero__btn {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>
+
+<section class="cyber-hero" id="cyber-hero-{{ section.id }}">
+  <div class="cyber-hero__inner">
+
+    {% if section.settings.kicker != blank %}
+      <span class="cyber-hero__kicker">{{ section.settings.kicker }}</span>
+    {% endif %}
+
+    {% if section.settings.title != blank %}
+      <h1 class="cyber-hero__title">{{ section.settings.title }}</h1>
+    {% endif %}
+
+    {% if section.settings.subtitle != blank %}
+      <p class="cyber-hero__subtitle">{{ section.settings.subtitle }}</p>
+    {% endif %}
+
+    {% if section.settings.body != blank %}
+      <p class="cyber-hero__body">{{ section.settings.body }}</p>
+    {% endif %}
+
+    <div class="cyber-hero__buttons">
+      {% if section.settings.btn1_text != blank %}
+        <a href="{{ section.settings.btn1_link }}" class="cyber-hero__btn cyber-hero__btn--primary">
+          {{ section.settings.btn1_text }}
+        </a>
+      {% endif %}
+      {% if section.settings.btn2_text != blank %}
+        <a href="{{ section.settings.btn2_link }}" class="cyber-hero__btn cyber-hero__btn--secondary">
+          {{ section.settings.btn2_text }}
+        </a>
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cyber Hero",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Etiqueta superior",
+      "default": "CYBER DAY · SOLO POR TIEMPO LIMITADO"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Título H1",
+      "default": "Cyber Day en Froens — Chaquetas, Polerones, Parkas y Más en Descuento"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtítulo",
+      "default": "Ropa de calidad para hombre, mujer y niños — despacho express en Santiago y más"
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Párrafo SEO",
+      "default": "El Cyber Day llegó a Froens con los mejores descuentos en chaquetas, polerones, parkas y camisas. Ropa sostenible al mejor precio del año."
+    },
+    {
+      "type": "text",
+      "id": "btn1_text",
+      "label": "Botón 1 - Texto",
+      "default": "VER OFERTAS HOMBRE"
+    },
+    {
+      "type": "url",
+      "id": "btn1_link",
+      "label": "Botón 1 - Link"
+    },
+    {
+      "type": "text",
+      "id": "btn2_text",
+      "label": "Botón 2 - Texto",
+      "default": "VER OFERTAS MUJER"
+    },
+    {
+      "type": "url",
+      "id": "btn2_link",
+      "label": "Botón 2 - Link"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Color de fondo",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color del título",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "height",
+      "label": "Altura mínima (px)",
+      "min": 400,
+      "max": 900,
+      "step": 50,
+      "default": 600
+    }
+  ],
+  "presets": [
+    {
+      "name": "Cyber Hero"
+    }
+  ]
+}
+{% endschema %}

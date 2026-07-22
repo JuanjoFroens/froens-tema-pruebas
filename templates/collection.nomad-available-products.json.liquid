@@ -1,0 +1,27 @@
+{%- layout none -%}
+{%- paginate collection.products by 10 -%}
+{
+  "items":[
+    {%- for product in collection.products -%}
+      {%- for variant in product.variants -%}
+        {
+          "id": {{ product.id | number }},
+          "handle": {{ product.handle | json }},
+          "inventoryQty": {{ variant.inventory_quantity | number }},
+          "inventoryPolicy": {{ variant.inventory_policy | json }},
+          "option1": {{ variant.option1 | json }},
+          "option2": {{ variant.option2 | json }},
+          "option3": {{ variant.option3 | json }},
+          "optionsWithValues": {{ product.options_with_values | json }},
+          "price": {{ product.price | number }},
+          "type": {{ product.type | json }},
+          "tags": {{ product.tags | json }},
+          "metafield": {{ variant.metafields.custom.inventory_locations.value | json }}
+        }
+        {% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+      {% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ]
+}
+{%- endpaginate -%}

@@ -1,0 +1,106 @@
+{% # Se llama desde sections/cart.liquid %}
+
+<style>
+  .mensaje-rut {font-size: inherit; margin: 5px 0 0 !important;font-style: italic;color: #4d4d4d; text-align: right;}
+  .gaea-rut {margin-bottom:10px; display: flex; justify-content: flex-end; align-items: center; gap: 10px;}
+  .gaea-rut label{ font-weight:600;}
+  .gaea-rut input {width:150px;margin:0;}
+</style>
+<!--
+<p class="mensaje-rut">
+  Para poder realizar tu compra debes ingresar tu Rut.
+</p>
+-->
+<p class="gaea-rut">
+  <label for="rut_cliente">RUT: </label>
+  <input id="rut_cliente" type="text" placeholder="Ej: 12345678-9" 
+    name="attributes[rut_cliente]" aria-required="true" 
+    value="{{ cart.attributes.rut_cliente }}" class="input-group-field" 
+    minlength="9" maxlength="10" required 
+  />
+</p>
+
+
+<script>
+
+  var RUT = {
+        // Valida el rut con su cadena completa "XXXXXXXX-X"
+        validaRut: function (rutCompleto) {
+            rutCompleto = rutCompleto.replace(".", "");
+            //console.log("consola: " + rutCompleto);
+            if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rutCompleto))
+                return false;
+            var tmp = rutCompleto.split('-');
+            var digv = tmp[1];
+            var rut = tmp[0];
+            if (digv == 'K') digv = 'k';
+
+            return (RUT.dv(rut) == digv);
+        },
+        dv: function (T) {
+            var M = 0, S = 1;
+            for (; T; T = Math.floor(T / 10))
+                S = (S + T % 10 * (9 - M++ % 6)) % 11;
+            return S ? S - 1 : 'k';
+        }
+    }
+  
+  function clearFormat(value) {
+    return value.replace(/[\.\-]/g, "");
+  }
+
+  function splitRutAndDv(rut) {
+    var cValue = clearFormat(rut);
+    if (cValue.length === 0) { return [null, null]; }
+    if (cValue.length === 1) { return [cValue, null]; }
+    var cDv = cValue.charAt(cValue.length - 1);
+    var cRut = cValue.substring(0, cValue.length - 1);
+    return [cRut, cDv];
+  }  
+
+  function formato(value) {
+    var rutAndDv = splitRutAndDv(value);
+    var cRut = rutAndDv[0]; var cDv = rutAndDv[1];
+    if (!(cRut && cDv)) { return cRut || value; }
+    var rutF = "";
+    while (cRut.length > 3) {
+      rutF = cRut.substr(cRut.length - 3) + rutF;
+      cRut = cRut.substring(0, cRut.length - 3);
+    }
+    return cRut + rutF + "-" + cDv;
+  }
+
+  $(function() {
+    console.log( "ready!" );
+    
+    /** deshabilitamos en botón chekout **/
+    $("button[name='checkout']").attr('disabled','true');
+    
+
+    /** colocar mascara rut **/
+    var rc = $('#rut_cliente');
+    $('#rut_cliente').keyup(function () {
+      rc.val(formato($.trim(rc.val()), true));
+
+      if(RUT.validaRut($("#rut_cliente").val()) && $("#rut_cliente").val().length>8 &&  $("#rut_cliente").val().length<11) {
+        $("button[name='checkout']").removeAttr('disabled');
+      }
+      else $("button[name='checkout']").attr('disabled','true');
+      //console.log('pulsa ' + RUT.validaRut($("#rut_cliente").val()));
+    });    
+
+    /** largo maximo campo rut (input) **/
+    $('#rut_cliente').attr('maxlength', '10');
+    $('#rut_cliente').attr('minlength', '9');
+
+    /** valida rut **/
+    $('#rut_cliente').change(function () {
+      if(RUT.validaRut($("#rut_cliente").val()) && $("#rut_cliente").val().length>8 &&  $("#rut_cliente").val().length<11) {
+        $("button[name='checkout']").removeAttr('disabled');
+      }
+      else $("button[name='checkout']").attr('disabled','true');
+      //console.log('cambia ' + RUT.validaRut($("#rut_cliente").val()));
+    });  
+    
+  });  
+</script>

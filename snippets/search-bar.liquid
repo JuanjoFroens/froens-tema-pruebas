@@ -1,0 +1,59 @@
+<!-- /snippets/search-bar.liquid -->
+
+<!-- Original
+<main-search>
+  <form action="{{ routes.search_url }}" method="get" class="search-bar" role="search">
+    <div class="input-group input-group--inner-button">
+      <input class="input-group-field"
+      type="search"
+      name="q"
+      value="{{ search.terms | escape }}"
+      placeholder="{{ 'general.search.placeholder' | t }}"
+      aria-label="{{ 'general.search.placeholder' | t }}">
+
+      <span class="input-group-button">
+        <div class="input-group-button__group">
+          <button type="reset" class="search-reset{% if search.terms == blank %} is-hidden{% endif %}" aria-label="{{ 'general.search.reset' | t }}">
+            {% render 'icon-core-x' %}
+          </button>
+
+          <button type="submit" class="btn btn--soft">
+            {{ 'general.search.submit' | t }}
+          </button>
+        </div>
+      </span>
+    </div>
+  </form>
+</main-search>
+-->
+
+<predictive-search>
+  <form action="{{ routes.search_url }}" method="get" class="search-bar" role="search">
+    <div class="item--loadbar" data-loading-indicator style="display: none;"></div>
+    <div class="input-group input-group--inner-button">
+      <input class="input-group-field"
+        type="search"
+        name="q"
+        value="{{ search.terms | escape }}"
+        placeholder="{{ 'general.search.placeholder' | t }}"
+        aria-label="{{ 'general.search.placeholder' | t }}"
+        data-predictive-search-input="search-bar-results"
+        autocomplete="off"
+        aria-controls="search-bar-results">
+
+      <span class="input-group-button">
+        <div class="input-group-button__group">
+          <button type="reset" class="search-reset{% if search.terms == blank %} is-hidden{% endif %}" aria-label="{{ 'general.search.reset' | t }}">
+            {% render 'icon-core-x' %}
+          </button>
+          <button type="submit" class="btn btn--soft">
+            {{ 'general.search.submit' | t }}
+          </button>
+        </div>
+      </span>
+    </div>
+
+    <div id="search-bar-results" class="header__search__results" tabindex="-1" data-predictive-search-results></div>
+    <span class="predictive-search-status visually-hidden" role="status" aria-hidden="true" data-predictive-search-status></span>
+  </form>
+</predictive-search>

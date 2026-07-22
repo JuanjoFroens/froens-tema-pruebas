@@ -1,0 +1,964 @@
+{% comment %}
+  =====================================================
+  SHOP THE LOOK — Sección personalizada para Shopify
+  Froens — Carrusel horizontal con popup + selector de talla
+  =====================================================
+  INSTRUCCIONES DE INSTALACIÓN:
+  1. En Shopify Admin → Online Store → Themes → Edit Code
+  2. En la carpeta "Sections", crear nuevo archivo: shop-the-look.liquid
+  3. Pegar todo este código
+  4. Guardar
+  5. En Customize, agregar la sección "Shop the Look" donde quieras
+{% endcomment %}
+
+<style>
+  /* ===== VARIABLES ===== */
+  :root {
+    --stl-bg: #ffffff;
+    --stl-text: #111111;
+    --stl-accent: #111111;
+    --stl-overlay-bg: rgba(0, 0, 0, 0.55);
+    --stl-popup-bg: #ffffff;
+    --stl-border: #e5e5e5;
+    --stl-font-title: 'Times New Roman', Georgia, serif;
+    --stl-font-body: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --stl-transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ===== SECTION WRAPPER ===== */
+  .stl-section {
+    background: var(--stl-bg);
+    padding: 60px 0 70px;
+    overflow: hidden;
+  }
+
+  .stl-header {
+    padding: 0 40px 32px;
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+  }
+
+  .stl-title {
+    font-family: var(--stl-font-title);
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--stl-text);
+    margin: 0;
+    line-height: 1;
+  }
+
+  /* ===== CARRUSEL ===== */
+  .stl-carousel-wrapper {
+    position: relative;
+  }
+
+  .stl-carousel {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding: 0 40px 20px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    cursor: grab;
+  }
+
+  .stl-carousel:active {
+    cursor: grabbing;
+  }
+
+  .stl-carousel::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ===== LOOK CARD ===== */
+  .stl-look-card {
+    flex: 0 0 auto;
+    width: clamp(220px, 22vw, 320px);
+    scroll-snap-align: start;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    background: #f5f5f5;
+  }
+
+  .stl-look-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0);
+    transition: background var(--stl-transition);
+  }
+
+  .stl-look-card:hover::after {
+    background: rgba(0,0,0,0.12);
+  }
+
+  .stl-look-img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--stl-transition);
+  }
+
+  .stl-look-card:hover .stl-look-img {
+    transform: scale(1.03);
+  }
+
+  .stl-look-cta {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%) translateY(6px);
+    background: #fff;
+    color: #111;
+    font-family: var(--stl-font-body);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 9px 20px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity var(--stl-transition), transform var(--stl-transition);
+    pointer-events: none;
+    z-index: 2;
+    border: 1px solid #111;
+  }
+
+  .stl-look-card:hover .stl-look-cta {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .stl-look-count {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #fff;
+    color: #111;
+    font-family: var(--stl-font-body);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    padding: 5px 9px;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity var(--stl-transition);
+  }
+
+  .stl-look-card:hover .stl-look-count {
+    opacity: 1;
+  }
+
+  /* ===== FLECHAS DE NAVEGACIÓN ===== */
+  .stl-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-60%);
+    width: 44px;
+    height: 44px;
+    background: #fff;
+    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.2s, border-color 0.2s;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+
+  .stl-nav-btn:hover {
+    background: #111;
+    border-color: #111;
+  }
+
+  .stl-nav-btn:hover svg path {
+    stroke: #fff;
+  }
+
+  .stl-nav-btn svg path {
+    stroke: #111;
+    transition: stroke 0.2s;
+  }
+
+  .stl-nav-prev { left: 8px; }
+  .stl-nav-next { right: 8px; }
+
+  .stl-nav-btn.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* ===== OVERLAY + POPUP ===== */
+  .stl-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--stl-overlay-bg);
+    z-index: 9998;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+  }
+
+  .stl-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .stl-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -52%) scale(0.97);
+    background: var(--stl-popup-bg);
+    z-index: 9999;
+    width: min(880px, 92vw);
+    max-height: 88vh;
+    overflow-y: auto;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    scrollbar-width: thin;
+    scrollbar-color: #ccc transparent;
+  }
+
+  .stl-popup::-webkit-scrollbar { width: 4px; }
+  .stl-popup::-webkit-scrollbar-track { background: transparent; }
+  .stl-popup::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
+
+  .stl-popup.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .stl-popup-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--stl-border);
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 2;
+  }
+
+  .stl-popup-title {
+    font-family: var(--stl-font-title);
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--stl-text);
+    margin: 0;
+  }
+
+  .stl-popup-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    line-height: 0;
+    color: #111;
+    transition: transform 0.2s;
+  }
+
+  .stl-popup-close:hover {
+    transform: rotate(90deg);
+  }
+
+  .stl-popup-products {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0;
+    padding: 28px;
+  }
+
+  /* ===== PRODUCTO EN POPUP ===== */
+  .stl-product-card {
+    padding: 0 12px 12px;
+    position: relative;
+  }
+
+  .stl-product-img-link {
+    display: block;
+    text-decoration: none;
+  }
+
+  .stl-product-img-wrap {
+    position: relative;
+    overflow: hidden;
+    background: #f5f5f5;
+    margin-bottom: 12px;
+    aspect-ratio: 3/4;
+  }
+
+  .stl-product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+
+  .stl-product-card:hover .stl-product-img {
+    transform: scale(1.04);
+  }
+
+  .stl-product-name {
+    font-family: var(--stl-font-body);
+    font-size: 12px;
+    font-weight: 500;
+    color: #111;
+    margin: 0 0 4px;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+  }
+
+  .stl-product-price {
+    font-family: var(--stl-font-body);
+    font-size: 12px;
+    color: #555;
+    margin: 0 0 10px;
+  }
+
+  .stl-product-price .compare-price {
+    text-decoration: line-through;
+    color: #aaa;
+    margin-right: 6px;
+  }
+
+  .stl-product-price .sale-price {
+    color: #c0392b;
+  }
+
+  .stl-add-to-cart {
+    width: 100%;
+    background: #111;
+    color: #fff;
+    border: none;
+    padding: 10px 8px;
+    font-family: var(--stl-font-body);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .stl-add-to-cart:hover:not(:disabled):not(.sold-out) {
+    background: #333;
+  }
+
+  .stl-add-to-cart.sold-out {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  .stl-wishlist-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(255,255,255,0.9);
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    line-height: 0;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 2;
+  }
+
+  .stl-product-card:hover .stl-wishlist-btn {
+    opacity: 1;
+  }
+
+  /* ===== SELECTOR DE TALLA ===== */
+  .stl-size-selector {
+    margin-bottom: 8px;
+  }
+
+  .stl-size-label {
+    font-family: var(--stl-font-body);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #555;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .stl-size-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 8px;
+  }
+
+  .stl-size-btn {
+    min-width: 34px;
+    height: 30px;
+    padding: 0 7px;
+    border: 1px solid #ddd;
+    background: #fff;
+    font-family: var(--stl-font-body);
+    font-size: 11px;
+    font-weight: 500;
+    color: #111;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, color 0.15s;
+    text-align: center;
+  }
+
+  .stl-size-btn:hover:not(.unavailable) {
+    border-color: #111;
+  }
+
+  .stl-size-btn.selected {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+  }
+
+  .stl-size-btn.unavailable {
+    color: #ccc;
+    border-color: #eee;
+    cursor: not-allowed;
+    text-decoration: line-through;
+    text-decoration-color: #ccc;
+  }
+
+  .stl-size-error {
+    font-family: var(--stl-font-body);
+    font-size: 10px;
+    color: #c0392b;
+    margin-bottom: 6px;
+    display: none;
+  }
+
+  .stl-size-error.visible {
+    display: block;
+  }
+
+  /* ===== PLACEHOLDER LOADING ===== */
+  @keyframes stl-pulse {
+    from { opacity: 0.5; }
+    to   { opacity: 1;   }
+  }
+
+  .stl-placeholder {
+    background: #f5f5f5;
+    min-height: 380px;
+    animation: stl-pulse 1.2s ease-in-out infinite alternate;
+  }
+
+  /* ===== MÓVIL ===== */
+  @media (max-width: 768px) {
+    .stl-section  { padding: 40px 0 50px; }
+    .stl-header   { padding: 0 20px 24px; }
+    .stl-carousel { padding: 0 20px 16px; gap: 12px; }
+    .stl-look-card { width: clamp(180px, 55vw, 260px); }
+    .stl-nav-btn  { display: none; }
+    .stl-popup {
+      width: 100%;
+      max-height: 90vh;
+      top: auto;
+      bottom: 0;
+      left: 0;
+      transform: translateY(20px);
+      border-radius: 16px 16px 0 0;
+    }
+    .stl-popup.active {
+      transform: translateY(0);
+      top: auto;
+      left: 0;
+    }
+    .stl-popup-products {
+      grid-template-columns: repeat(2, 1fr);
+      padding: 20px;
+    }
+    .stl-look-cta {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+</style>
+
+<section class="stl-section" id="stl-{{ section.id }}">
+  <div class="stl-header">
+    <h2 class="stl-title">{{ section.settings.section_title | default: 'Shop the Look' }}</h2>
+  </div>
+
+  <div class="stl-carousel-wrapper">
+    <button class="stl-nav-btn stl-nav-prev hidden" aria-label="Anterior">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M11 4L6 9L11 14" stroke="#111" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <div class="stl-carousel" id="stl-carousel-{{ section.id }}">
+      {% for block in section.blocks %}
+        {% if block.type == 'look' %}
+          {% assign product_count = 0 %}
+          {% if block.settings.product_1 != blank %}{% assign product_count = product_count | plus: 1 %}{% endif %}
+          {% if block.settings.product_2 != blank %}{% assign product_count = product_count | plus: 1 %}{% endif %}
+          {% if block.settings.product_3 != blank %}{% assign product_count = product_count | plus: 1 %}{% endif %}
+          {% if block.settings.product_4 != blank %}{% assign product_count = product_count | plus: 1 %}{% endif %}
+
+          <div
+            class="stl-look-card"
+            data-look-id="{{ block.id }}"
+            role="button"
+            tabindex="0"
+            aria-label="Ver look {{ forloop.index }}"
+          >
+            {% if block.settings.look_image != blank %}
+              <img
+                src="{{ block.settings.look_image | img_url: '600x' }}"
+                alt="{{ block.settings.look_name | default: 'Look ' | append: forloop.index }}"
+                class="stl-look-img"
+                loading="lazy"
+                width="600"
+              >
+            {% else %}
+              {{ 'lifestyle-1' | placeholder_svg_tag: 'stl-look-img' }}
+            {% endif %}
+
+            <span class="stl-look-cta">Ver look</span>
+            {% if product_count > 0 %}
+              <span class="stl-look-count">{{ product_count }} piezas</span>
+            {% endif %}
+          </div>
+
+          <!-- DATA del look para el popup -->
+          <div class="stl-popup-data" id="stl-popup-data-{{ block.id }}" style="display:none"
+            data-title="{{ block.settings.look_name | default: 'Shop the Look' }}"
+          >
+            {% for i in (1..4) %}
+              {% assign key = 'product_' | append: i %}
+              {% assign prod_handle = block.settings[key] %}
+              {% if prod_handle != blank %}
+                {% assign prod = all_products[prod_handle] %}
+                {% if prod and prod != empty %}
+                  {% assign is_on_sale = false %}
+                  {% if prod.compare_at_price_max > prod.price %}{% assign is_on_sale = true %}{% endif %}
+                  <div class="stl-popup-product-item"
+                    data-id="{{ prod.id }}"
+                    data-title="{{ prod.title | escape }}"
+                    data-url="{{ prod.url }}"
+                    data-price="{{ prod.price | money }}"
+                    data-compare="{{ prod.compare_at_price | money }}"
+                    data-on-sale="{{ is_on_sale }}"
+                    data-available="{{ prod.available }}"
+                    data-variant="{{ prod.first_available_variant.id | default: prod.variants.first.id }}"
+                    data-handle="{{ prod.handle }}"
+                    data-img="{{ prod.featured_image | img_url: '400x' }}"
+                    data-img-alt="{{ prod.featured_image.alt | escape | default: prod.title | escape }}"
+                  ></div>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          </div>
+
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <button class="stl-nav-btn stl-nav-next" aria-label="Siguiente">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M7 4L12 9L7 14" stroke="#111" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+</section>
+
+<!-- OVERLAY -->
+<div class="stl-overlay" id="stl-overlay-{{ section.id }}"></div>
+
+<!-- POPUP -->
+<div class="stl-popup" id="stl-popup-{{ section.id }}" role="dialog" aria-modal="true" aria-label="Shop the Look">
+  <div class="stl-popup-header">
+    <h3 class="stl-popup-title" id="stl-popup-title-{{ section.id }}">Shop the Look</h3>
+    <button class="stl-popup-close" id="stl-popup-close-{{ section.id }}" aria-label="Cerrar">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M4 4L16 16M16 4L4 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+  <div class="stl-popup-products" id="stl-popup-products-{{ section.id }}"></div>
+</div>
+
+<script>
+(function() {
+  var sectionId     = '{{ section.id }}';
+  var carousel      = document.getElementById('stl-carousel-' + sectionId);
+  var overlay       = document.getElementById('stl-overlay-' + sectionId);
+  var popup         = document.getElementById('stl-popup-' + sectionId);
+  var popupTitle    = document.getElementById('stl-popup-title-' + sectionId);
+  var popupProducts = document.getElementById('stl-popup-products-' + sectionId);
+  var closeBtn      = document.getElementById('stl-popup-close-' + sectionId);
+  var prevBtn       = document.querySelector('#stl-{{ section.id }} .stl-nav-prev');
+  var nextBtn       = document.querySelector('#stl-{{ section.id }} .stl-nav-next');
+
+  // ===== ABRIR POPUP =====
+  function openPopup(lookId) {
+    var dataEl = document.getElementById('stl-popup-data-' + lookId);
+    if (!dataEl) return;
+
+    popupTitle.textContent = dataEl.dataset.title || 'Shop the Look';
+    popupProducts.innerHTML = '';
+
+    var items = dataEl.querySelectorAll('.stl-popup-product-item');
+
+    // Placeholders mientras cargan los productos
+    items.forEach(function() {
+      var ph = document.createElement('div');
+      ph.className = 'stl-product-card stl-placeholder';
+      popupProducts.appendChild(ph);
+    });
+
+    overlay.classList.add('active');
+    popup.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    popup.scrollTop = 0;
+
+    // Cargar cada producto con sus variantes desde la API
+    items.forEach(function(item, index) {
+      var data = item.dataset;
+      fetch('/products/' + data.handle + '.js')
+        .then(function(r) { return r.json(); })
+        .then(function(product) {
+          var card = buildProductCard(data, product.variants);
+          var placeholders = popupProducts.querySelectorAll('.stl-product-card');
+          if (placeholders[index]) {
+            popupProducts.replaceChild(card, placeholders[index]);
+          } else {
+            popupProducts.appendChild(card);
+          }
+        })
+        .catch(function() {
+          var card = buildProductCard(data, []);
+          var placeholders = popupProducts.querySelectorAll('.stl-product-card');
+          if (placeholders[index]) {
+            popupProducts.replaceChild(card, placeholders[index]);
+          }
+        });
+    });
+  }
+
+  // ===== CERRAR POPUP =====
+  function closePopup() {
+    overlay.classList.remove('active');
+    popup.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  // ===== CONSTRUIR CARD DE PRODUCTO =====
+  function buildProductCard(data, variants) {
+    var card = document.createElement('div');
+    card.className = 'stl-product-card';
+
+    var isOnSale    = data.onSale === 'true';
+    var isAvailable = data.available === 'true';
+
+    // Precio
+    var priceHTML = '';
+    if (isOnSale && data.compare) {
+      priceHTML = '<span class="compare-price">' + data.compare + '</span><span class="sale-price">' + data.price + '</span>';
+    } else {
+      priceHTML = data.price;
+    }
+
+    // Tallas: excluir variante única "Default Title"
+    var sizeVariants = variants.filter(function(v) {
+      return v.title !== 'Default Title';
+    });
+    var hasSizes = sizeVariants.length > 1;
+
+    // Selector de talla
+    var sizeHTML = '';
+    if (hasSizes) {
+      var optionsHTML = sizeVariants.map(function(v) {
+        var unavailableClass = v.available ? '' : ' unavailable';
+        return '<button class="stl-size-btn' + unavailableClass + '" data-variant-id="' + v.id + '">' + v.option1 + '</button>';
+      }).join('');
+
+      sizeHTML =
+        '<div class="stl-size-selector">' +
+          '<span class="stl-size-label">Talla</span>' +
+          '<div class="stl-size-options">' + optionsHTML + '</div>' +
+        '</div>' +
+        '<p class="stl-size-error">Selecciona una talla</p>';
+    }
+
+    // Botón agregar al carro
+    var addBtnHTML = '';
+    if (!isAvailable) {
+      addBtnHTML = '<span class="stl-add-to-cart sold-out">Agotado</span>';
+    } else if (hasSizes) {
+      addBtnHTML = '<button class="stl-add-to-cart" data-variant="" disabled style="opacity:0.4;cursor:default">Selecciona una talla</button>';
+    } else {
+      var singleVariantId = (variants.length > 0) ? variants[0].id : data.variant;
+      addBtnHTML = '<button class="stl-add-to-cart" data-variant="' + singleVariantId + '">Agregar al carro</button>';
+    }
+
+    card.innerHTML =
+      '<a href="' + data.url + '" class="stl-product-img-link">' +
+        '<div class="stl-product-img-wrap">' +
+          '<img src="' + data.img + '" alt="' + (data.imgAlt || data.title) + '" class="stl-product-img" loading="lazy">' +
+          '<button class="stl-wishlist-btn" aria-label="Guardar">' +
+            '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 13.5S1.5 9.5 1.5 5.5A3.5 3.5 0 018 3.036 3.5 3.5 0 0114.5 5.5C14.5 9.5 8 13.5 8 13.5z" stroke="#111" stroke-width="1.2" stroke-linejoin="round"/></svg>' +
+          '</button>' +
+        '</div>' +
+      '</a>' +
+      '<p class="stl-product-name">' + data.title + '</p>' +
+      '<p class="stl-product-price">' + priceHTML + '</p>' +
+      sizeHTML +
+      addBtnHTML;
+
+    // ===== EVENTO: SELECCIONAR TALLA =====
+    if (hasSizes) {
+      var sizeButtons = card.querySelectorAll('.stl-size-btn');
+      var addBtn      = card.querySelector('.stl-add-to-cart');
+      var sizeError   = card.querySelector('.stl-size-error');
+
+      sizeButtons.forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          if (this.classList.contains('unavailable')) return;
+
+          sizeButtons.forEach(function(b) { b.classList.remove('selected'); });
+          this.classList.add('selected');
+
+          addBtn.dataset.variant = this.dataset.variantId;
+          addBtn.textContent     = 'Agregar al carro';
+          addBtn.disabled        = false;
+          addBtn.style.opacity   = '1';
+          addBtn.style.cursor    = 'pointer';
+
+          if (sizeError) sizeError.classList.remove('visible');
+        });
+      });
+
+      if (addBtn) {
+        addBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          if (!this.dataset.variant) {
+            if (sizeError) sizeError.classList.add('visible');
+            return;
+          }
+          addToCart(this);
+        });
+      }
+    } else {
+      var addBtn = card.querySelector('.stl-add-to-cart:not(.sold-out)');
+      if (addBtn) {
+        addBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          addToCart(this);
+        });
+      }
+    }
+
+    // Evitar que el link de la imagen propague al card
+    var imgLink = card.querySelector('.stl-product-img-link');
+    if (imgLink) {
+      imgLink.addEventListener('click', function(e) {
+        e.stopPropagation();
+      });
+    }
+
+    return card;
+  }
+
+  // ===== AGREGAR AL CARRO =====
+  function addToCart(btnEl) {
+    var variantId = btnEl.dataset.variant;
+    if (!variantId) return;
+
+    var originalText = btnEl.textContent;
+    btnEl.textContent = 'Agregando...';
+    btnEl.disabled    = true;
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: parseInt(variantId), quantity: 1 })
+    })
+    .then(function(res) { return res.json(); })
+    .then(function() {
+      btnEl.textContent      = '✓ Agregado';
+      btnEl.style.background = '#2d6a4f';
+      setTimeout(function() {
+        btnEl.textContent      = originalText;
+        btnEl.style.background = '';
+        btnEl.disabled         = false;
+      }, 2200);
+
+      // Actualizar contador del carrito
+      fetch('/cart.js')
+        .then(function(r) { return r.json(); })
+        .then(function(cart) {
+          var counters = document.querySelectorAll('[data-cart-count], .cart-count, .js-cart-count, .header__cart-count');
+          counters.forEach(function(el) { el.textContent = cart.item_count; });
+        });
+    })
+    .catch(function() {
+      btnEl.textContent = 'Error — reintentar';
+      btnEl.disabled    = false;
+    });
+  }
+
+  // ===== EVENTOS CARDS DEL CARRUSEL =====
+  var cards = carousel.querySelectorAll('.stl-look-card');
+  cards.forEach(function(card) {
+    card.addEventListener('click', function() {
+      openPopup(this.dataset.lookId);
+    });
+    card.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openPopup(this.dataset.lookId);
+      }
+    });
+  });
+
+  // ===== CERRAR =====
+  closeBtn.addEventListener('click', closePopup);
+  overlay.addEventListener('click', closePopup);
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closePopup();
+  });
+
+  // ===== FLECHAS CARRUSEL =====
+  var SCROLL_AMOUNT = 340;
+
+  function updateNavButtons() {
+    if (!prevBtn || !nextBtn) return;
+    prevBtn.classList.toggle('hidden', carousel.scrollLeft <= 10);
+    nextBtn.classList.toggle('hidden', carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth - 10);
+  }
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', function() {
+      carousel.scrollBy({ left: -SCROLL_AMOUNT, behavior: 'smooth' });
+    });
+  }
+  if (nextBtn) {
+    nextBtn.addEventListener('click', function() {
+      carousel.scrollBy({ left: SCROLL_AMOUNT, behavior: 'smooth' });
+    });
+  }
+
+  carousel.addEventListener('scroll', updateNavButtons);
+  updateNavButtons();
+
+  // ===== DRAG TO SCROLL (desktop) =====
+  var isDragging = false;
+  var startX, scrollLeft;
+
+  carousel.addEventListener('mousedown', function(e) {
+    isDragging = true;
+    startX     = e.pageX - carousel.offsetLeft;
+    scrollLeft = carousel.scrollLeft;
+    carousel.style.userSelect = 'none';
+  });
+
+  document.addEventListener('mouseup', function() {
+    isDragging = false;
+    carousel.style.userSelect = '';
+  });
+
+  carousel.addEventListener('mousemove', function(e) {
+    if (!isDragging) return;
+    e.preventDefault();
+    var x    = e.pageX - carousel.offsetLeft;
+    var walk = (x - startX) * 1.5;
+    carousel.scrollLeft = scrollLeft - walk;
+  });
+
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Shop the Look",
+  "tag": "section",
+  "class": "stl-section-wrapper",
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Título de la sección",
+      "default": "Shop the Look"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "look",
+      "name": "Look",
+      "limit": 12,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "look_image",
+          "label": "Foto del look (imagen principal del carrusel)"
+        },
+        {
+          "type": "text",
+          "id": "look_name",
+          "label": "Nombre del look (título del popup)",
+          "default": "Shop the Look"
+        },
+        {
+          "type": "product",
+          "id": "product_1",
+          "label": "Producto 1"
+        },
+        {
+          "type": "product",
+          "id": "product_2",
+          "label": "Producto 2"
+        },
+        {
+          "type": "product",
+          "id": "product_3",
+          "label": "Producto 3"
+        },
+        {
+          "type": "product",
+          "id": "product_4",
+          "label": "Producto 4"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop the Look",
+      "blocks": [
+        { "type": "look", "settings": { "look_name": "Look 1" } },
+        { "type": "look", "settings": { "look_name": "Look 2" } },
+        { "type": "look", "settings": { "look_name": "Look 3" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

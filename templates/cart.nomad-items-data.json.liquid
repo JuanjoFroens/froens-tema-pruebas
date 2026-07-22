@@ -1,0 +1,12 @@
+{%- layout none -%}
+{
+	"items":[
+	{%- for item in cart.items -%}
+      {
+          "inventoryQuantity": {{ item.variant.inventory_quantity | number }},
+          "data": {{ item | json }},
+          "metafield": {{ item.variant.metafields.custom.inventory_locations.value | json }}
+      }{% unless forloop.last %},{% endunless %}
+	{%- endfor -%}
+	]
+}

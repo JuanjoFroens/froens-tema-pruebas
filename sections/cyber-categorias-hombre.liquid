@@ -1,0 +1,237 @@
+{% comment %}
+  SECCIÓN: Cyber Categorías Hombre
+  Archivo: sections/cyber-categorias-hombre.liquid
+  Descripción: Grilla de categorías para hombre con imagen y link
+{% endcomment %}
+
+<style>
+  .cyber-cats-hombre {
+    padding: 60px 20px;
+    background-color: {{ section.settings.bg_color }};
+  }
+
+  .cyber-cats-hombre__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .cyber-cats-hombre__header {
+    margin-bottom: 32px;
+  }
+
+  .cyber-cats-hombre__label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 8px;
+  }
+
+  .cyber-cats-hombre__title {
+    font-size: clamp(24px, 3vw, 36px);
+    font-weight: 700;
+    color: {{ section.settings.text_color }};
+    margin: 0 0 8px;
+    line-height: 1.1;
+  }
+
+  .cyber-cats-hombre__desc {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+    max-width: 500px;
+  }
+
+  .cyber-cats-hombre__grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+  }
+
+  .cyber-cats-hombre__item {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 3/4;
+    background-color: #e8e8e8;
+    display: block;
+    text-decoration: none;
+  }
+
+  .cyber-cats-hombre__item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+
+  .cyber-cats-hombre__item:hover img {
+    transform: scale(1.05);
+  }
+
+  .cyber-cats-hombre__item-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+    color: #fff;
+  }
+
+  .cyber-cats-hombre__item-label {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.8;
+    margin-bottom: 3px;
+  }
+
+  .cyber-cats-hombre__item-name {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+
+  .cyber-cats-hombre__item-cta {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 4px;
+    opacity: 0.8;
+  }
+
+  .cyber-cats-hombre__item--placeholder {
+    background-color: #d0d0d0;
+  }
+
+  @media (max-width: 900px) {
+    .cyber-cats-hombre__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 560px) {
+    .cyber-cats-hombre__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
+
+<section class="cyber-cats-hombre" id="cyber-cats-hombre-{{ section.id }}">
+  <div class="cyber-cats-hombre__inner">
+    <div class="cyber-cats-hombre__header">
+      {% if section.settings.label != blank %}
+        <span class="cyber-cats-hombre__label">{{ section.settings.label }}</span>
+      {% endif %}
+      {% if section.settings.title != blank %}
+        <h2 class="cyber-cats-hombre__title">{{ section.settings.title }}</h2>
+      {% endif %}
+      {% if section.settings.description != blank %}
+        <p class="cyber-cats-hombre__desc">{{ section.settings.description }}</p>
+      {% endif %}
+    </div>
+
+    <div class="cyber-cats-hombre__grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.link }}" class="cyber-cats-hombre__item{% if block.settings.image == blank %} cyber-cats-hombre__item--placeholder{% endif %}" {{ block.shopify_attributes }}>
+          {% if block.settings.image != blank %}
+            <img
+              src="{{ block.settings.image | image_url: width: 400 }}"
+              alt="{{ block.settings.name }}"
+              loading="lazy"
+              width="400"
+              height="533"
+            >
+          {% endif %}
+          <div class="cyber-cats-hombre__item-info">
+            <span class="cyber-cats-hombre__item-label">CYBER DAY</span>
+            <span class="cyber-cats-hombre__item-name">{{ block.settings.name }}</span>
+            <span class="cyber-cats-hombre__item-cta">VER OFERTAS →</span>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cyber Categorías Hombre",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Etiqueta superior",
+      "default": "CYBER DAY — HOMBRE"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Descuentos Cyber Day en Ropa de Hombre"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Descripción",
+      "default": "Chaquetas, parkas, polerones y más con descuentos reales. Toda la colección masculina Froens en oferta durante el Cyber Day."
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Color de fondo",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color del título",
+      "default": "#000000"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "categoria",
+      "name": "Categoría",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagen"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Nombre de categoría",
+          "default": "Chaquetas y Parkas"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Cyber Categorías Hombre",
+      "blocks": [
+        { "type": "categoria", "settings": { "name": "Chaquetas y Parkas Hombre" } },
+        { "type": "categoria", "settings": { "name": "Polerones Hombre" } },
+        { "type": "categoria", "settings": { "name": "Camisas Hombre" } },
+        { "type": "categoria", "settings": { "name": "Pantalones Hombre" } },
+        { "type": "categoria", "settings": { "name": "Polares Hombre" } },
+        { "type": "categoria", "settings": { "name": "Chalecos Hombre" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

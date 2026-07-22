@@ -1,0 +1,801 @@
+{% doc %}
+  @prompt
+    Tabs de navegación en el header. que pueda poner textos a la izquierda y derecha NO en el centro. Que pueda editar la tipografía y que cuando seleccione un tab se  Subrayado activo Mostrar subrayado en pestaña activa. Además que cada tab tenga la opción de incluirlo en mobile, desktop o ambos. 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-header-tabs-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    border-bottom: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+  }
+
+  .ai-header-tabs__container-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+    padding: {{ block.settings.vertical_padding }}px {{ block.settings.horizontal_padding }}px;
+  }
+
+  .ai-header-tabs__group-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.tab_spacing }}px;
+    align-items: center;
+  }
+
+  .ai-header-tabs__tab-{{ ai_gen_id }} {
+    position: relative;
+    text-decoration: none;
+    color: {{ block.settings.text_color }};
+    font-family: {{ block.settings.font_family.family }}, {{ block.settings.font_family.fallback_families }};
+    font-weight: {{ block.settings.font_family.weight }};
+    font-size: {{ block.settings.font_size }}px;
+    padding: {{ block.settings.tab_padding_vertical }}px {{ block.settings.tab_padding_horizontal }}px;
+    transition: color 0.3s ease;
+    {% if block.settings.text_transform == 'uppercase' %}
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    {% endif %}
+  }
+
+  .ai-header-tabs__tab-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.text_hover_color }};
+  }
+
+  .ai-header-tabs__tab-{{ ai_gen_id }}.active {
+    color: {{ block.settings.active_text_color }};
+  }
+
+  {% if block.settings.show_underline %}
+    .ai-header-tabs__tab-{{ ai_gen_id }}::after {
+      content: '';
+      position: absolute;
+      bottom: -{{ block.settings.underline_offset }}px;
+      left: 0;
+      width: 100%;
+      height: {{ block.settings.underline_thickness }}px;
+      background-color: transparent;
+      transition: background-color 0.3s ease;
+    }
+
+    .ai-header-tabs__tab-{{ ai_gen_id }}.active::after {
+      background-color: {{ block.settings.underline_color }};
+    }
+  {% endif %}
+
+  @media screen and (max-width: 749px) {
+    .ai-header-tabs__tab-{{ ai_gen_id }}.desktop-only {
+      display: none;
+    }
+
+    .ai-header-tabs__container-{{ ai_gen_id }} {
+      padding: {{ block.settings.vertical_padding | times: 0.8 }}px {{ block.settings.horizontal_padding | times: 0.8 }}px;
+    }
+
+    .ai-header-tabs__group-{{ ai_gen_id }} {
+      gap: {{ block.settings.tab_spacing | times: 0.7 }}px;
+    }
+
+    .ai-header-tabs__tab-{{ ai_gen_id }} {
+      font-size: {{ block.settings.font_size | times: 0.9 }}px;
+      padding: {{ block.settings.tab_padding_vertical | times: 0.8 }}px {{ block.settings.tab_padding_horizontal | times: 0.8 }}px;
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-header-tabs__tab-{{ ai_gen_id }}.mobile-only {
+      display: none;
+    }
+  }
+{% endstyle %}
+
+<header-tabs-{{ ai_gen_id }} class="ai-header-tabs-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-header-tabs__container-{{ ai_gen_id }}">
+    <div class="ai-header-tabs__group-{{ ai_gen_id }} ai-header-tabs__group--left-{{ ai_gen_id }}">
+      {% for i in (1..5) %}
+        {% liquid
+          assign tab_enabled_key = 'tab_left_' | append: i | append: '_enabled'
+          assign tab_text_key = 'tab_left_' | append: i | append: '_text'
+          assign tab_url_key = 'tab_left_' | append: i | append: '_url'
+          assign tab_visibility_key = 'tab_left_' | append: i | append: '_visibility'
+
+          assign tab_enabled = block.settings[tab_enabled_key]
+          assign tab_text = block.settings[tab_text_key]
+          assign tab_url = block.settings[tab_url_key]
+          assign tab_visibility = block.settings[tab_visibility_key]
+        %}
+
+        {% if tab_enabled and tab_text != blank %}
+          {% assign visibility_class = '' %}
+          {% if tab_visibility == 'desktop' %}
+            {% assign visibility_class = 'desktop-only' %}
+          {% elsif tab_visibility == 'mobile' %}
+            {% assign visibility_class = 'mobile-only' %}
+          {% endif %}
+
+          {% assign is_active = false %}
+          {% if tab_url == request.path or tab_url == request.url %}
+            {% assign is_active = true %}
+          {% endif %}
+
+          <a
+            href="{{ tab_url }}"
+            class="ai-header-tabs__tab-{{ ai_gen_id }} {{ visibility_class }} {% if is_active %}active{% endif %}"
+            data-tab-id="left-{{ i }}"
+          >
+            {{ tab_text }}
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="ai-header-tabs__group-{{ ai_gen_id }} ai-header-tabs__group--right-{{ ai_gen_id }}">
+      {% for i in (1..5) %}
+        {% liquid
+          assign tab_enabled_key = 'tab_right_' | append: i | append: '_enabled'
+          assign tab_text_key = 'tab_right_' | append: i | append: '_text'
+          assign tab_url_key = 'tab_right_' | append: i | append: '_url'
+          assign tab_visibility_key = 'tab_right_' | append: i | append: '_visibility'
+
+          assign tab_enabled = block.settings[tab_enabled_key]
+          assign tab_text = block.settings[tab_text_key]
+          assign tab_url = block.settings[tab_url_key]
+          assign tab_visibility = block.settings[tab_visibility_key]
+        %}
+
+        {% if tab_enabled and tab_text != blank %}
+          {% assign visibility_class = '' %}
+          {% if tab_visibility == 'desktop' %}
+            {% assign visibility_class = 'desktop-only' %}
+          {% elsif tab_visibility == 'mobile' %}
+            {% assign visibility_class = 'mobile-only' %}
+          {% endif %}
+
+          {% assign is_active = false %}
+          {% if tab_url == request.path or tab_url == request.url %}
+            {% assign is_active = true %}
+          {% endif %}
+
+          <a
+            href="{{ tab_url }}"
+            class="ai-header-tabs__tab-{{ ai_gen_id }} {{ visibility_class }} {% if is_active %}active{% endif %}"
+            data-tab-id="right-{{ i }}"
+          >
+            {{ tab_text }}
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</header-tabs-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class HeaderTabs{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.tabs = this.querySelectorAll('.ai-header-tabs__tab-{{ ai_gen_id }}');
+        this.setupActiveState();
+      }
+
+      setupActiveState() {
+        const currentPath = window.location.pathname;
+        const currentUrl = window.location.href;
+
+        this.tabs.forEach((tab) => {
+          const tabHref = tab.getAttribute('href');
+          
+          if (tabHref === currentPath || tabHref === currentUrl) {
+            tab.classList.add('active');
+          }
+        });
+      }
+    }
+
+    customElements.define('header-tabs-{{ ai_gen_id }}', HeaderTabs{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Tabs de navegación",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Estilo general"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Color de fondo",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Color del borde",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Grosor del borde",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Ancho máximo",
+      "min": 800,
+      "max": 2000,
+      "step": 50,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "vertical_padding",
+      "label": "Espaciado vertical",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "horizontal_padding",
+      "label": "Espaciado horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "tab_spacing",
+      "label": "Espacio entre tabs",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Tipografía"
+    },
+    {
+      "type": "font_picker",
+      "id": "font_family",
+      "label": "Fuente",
+      "default": "archivo_n4"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Tamaño de fuente",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "text_transform",
+      "label": "Transformación de texto",
+      "options": [
+        {
+          "value": "none",
+          "label": "Normal"
+        },
+        {
+          "value": "uppercase",
+          "label": "Mayúsculas"
+        }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "tab_padding_vertical",
+      "label": "Espaciado vertical del tab",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "tab_padding_horizontal",
+      "label": "Espaciado horizontal del tab",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Colores de texto"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color de texto",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_hover_color",
+      "label": "Color al pasar el cursor",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "active_text_color",
+      "label": "Color de texto activo",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Subrayado activo"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_underline",
+      "label": "Mostrar subrayado en pestaña activa",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "underline_color",
+      "label": "Color del subrayado",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "underline_thickness",
+      "label": "Grosor del subrayado",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "underline_offset",
+      "label": "Distancia del subrayado",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Tabs izquierda - Tab 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "tab_left_1_enabled",
+      "label": "Activar tab",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "tab_left_1_text",
+      "label": "Texto",
+      "default": "Inicio"
+    },
+    {
+      "type": "url",
+      "id": "tab_left_1_url",
+      "label": "URL"
+    },
+    {
+      "type": "select",
+      "id": "tab_left_1_visibility",
+      "label": "Visibilidad",
+      "options": [
+        {
+          "value": "both",
+          "label": "Mobile y Desktop"
+        },
+        {
+          "value": "desktop",
+          "label": "Solo Desktop"
+        },
+        {
+          "value": "mobile",
+          "label": "Solo Mobile"
+        }
+      ],
+      "default": "both"
+    },
+    {
+      "type": "header",
+      "content": "Tabs izquierda - Tab 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "tab_left_2_enabled",
+      "label": "Activar tab",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "tab_left_2_text",
+      "label": "Texto",
+      "default": "Productos"
+    },
+    {
+      "type": "url",
+      "id": "tab_left_2_url",
+      "label": "URL"
+    },
+    {
+      "type": "select",
+      "id": "tab_left_2_visibility",
+      "label": "Visibilidad",
+      "options": [
+        {
+          "value": "both",
+          "label": "Mobile y Desktop"
+        },
+        {
+          "value": "desktop",
+          "label": "Solo Desktop"
+        },
+        {
+          "value": "mobile",
+          "label": "Solo Mobile"
+        }
+      ],
+      "default": "both"
+    },
+    {
+      "type": "header",
+      "content": "Tabs izquierda - Tab 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "tab_left_3_enabled",
+      "label": "Activar tab",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "tab_left_3_text",
+      "label": "Texto"
+    },
+    {
+      "type": "url",
+      "id": "tab_left_3_url",
+      "label": "URL"
+    },
+    {
+      "type": "select",
+      "id": "tab_left_3_visibility",
+      "label": "Visibilidad",
+      "options": [
+        {
+          "value": "both",
+          "label": "Mobile y Desktop"
+        },
+        {
+          "value": "desktop",
+          "label": "Solo Desktop"
+        },
+        {
+          "value": "mobile",
+          "label": "Solo Mobile"
+        }
+      ],
+      "default": "both"
+    },
+    {
+      "type": "header",
+      "content": "Tabs izquierda - Tab 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "tab_left_4_enabled",
+      "label": "Activar tab",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "tab_left_4_text",
+      "label": "Texto"
+    },
+    {
+      "type": "url",
+      "id": "tab_left_4_url",
+      "label": "URL"
+    },
+    {
+      "type": "select",
+      "id": "tab_left_4_visibility",
+      "label": "Visibilidad",
+      "options": [
+        {
+          "value": "both",
+          "label": "Mobile y Desktop"
+        },
+        {
+          "value": "desktop",
+          "label": "Solo Desktop"
+        },
+        {
+          "value": "mobile",
+          "label": "Solo Mobile"
+        }
+      ],
+      "default": "both"
+    },
+    {
+      "type": "header",
+      "content": "Tabs izquierda - Tab 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "tab_left_5_enabled",
+      "label": "Activar tab",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "tab_left_5_text",
+      "label": "Texto"
+    },
+    {
+      "type": "url",
+      "id": "tab_left_5_url",
+      "label": "URL"
+    },
+    {
+      "type": "select",
+      "id": "tab_left_5_visibility",
+      "label": "Visibilidad",
+      "options": [
+        {
+          "value": "both",
+          "label": "Mobile y Desktop"
+        },
+        {
+          "value": "desktop",
+          "label": "Solo Desktop"
+        },
+        {
+          "value": "mobile",
+          "label": "Solo Mobile"
+        }
+      ],
+      "default": "both"
+    },
+    {
+      "type": "header",
+      "content": "Tabs derecha - Tab 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "tab_right_1_enabled",
+      "label": "Activar tab",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "tab_right_1_text",
+      "label": "Texto",
+      "default": "Contacto"
+    },
+    {
+      "type": "url",
+      "id": "tab_right_1_url",
+      "label": "URL"
+    },
+    {
+      "type": "select",
+      "id": "tab_right_1_visibility",
+      "label": "Visibilidad",
+      "options": [
+        {
+          "value": "both",
+          "label": "Mobile y Desktop"
+        },
+        {
+          "value": "desktop",
+          "label": "Solo Desktop"
+        },
+        {
+          "value": "mobile",
+          "label": "Solo Mobile"
+        }
+      ],
+      "default": "both"
+    },
+    {
+      "type": "header",
+      "content": "Tabs derecha - Tab 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "tab_right_2_enabled",
+      "label": "Activar tab",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "tab_right_2_text",
+      "label": "Texto"
+    },
+    {
+      "type": "url",
+      "id": "tab_right_2_url",
+      "label": "URL"
+    },
+    {
+      "type": "select",
+      "id": "tab_right_2_visibility",
+      "label": "Visibilidad",
+      "options": [
+        {
+          "value": "both",
+          "label": "Mobile y Desktop"
+        },
+        {
+          "value": "desktop",
+          "label": "Solo Desktop"
+        },
+        {
+          "value": "mobile",
+          "label": "Solo Mobile"
+        }
+      ],
+      "default": "both"
+    },
+    {
+      "type": "header",
+      "content": "Tabs derecha - Tab 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "tab_right_3_enabled",
+      "label": "Activar tab",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "tab_right_3_text",
+      "label": "Texto"
+    },
+    {
+      "type": "url",
+      "id": "tab_right_3_url",
+      "label": "URL"
+    },
+    {
+      "type": "select",
+      "id": "tab_right_3_visibility",
+      "label": "Visibilidad",
+      "options": [
+        {
+          "value": "both",
+          "label": "Mobile y Desktop"
+        },
+        {
+          "value": "desktop",
+          "label": "Solo Desktop"
+        },
+        {
+          "value": "mobile",
+          "label": "Solo Mobile"
+        }
+      ],
+      "default": "both"
+    },
+    {
+      "type": "header",
+      "content": "Tabs derecha - Tab 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "tab_right_4_enabled",
+      "label": "Activar tab",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "tab_right_4_text",
+      "label": "Texto"
+    },
+    {
+      "type": "url",
+      "id": "tab_right_4_url",
+      "label": "URL"
+    },
+    {
+      "type": "select",
+      "id": "tab_right_4_visibility",
+      "label": "Visibilidad",
+      "options": [
+        {
+          "value": "both",
+          "label": "Mobile y Desktop"
+        },
+        {
+          "value": "desktop",
+          "label": "Solo Desktop"
+        },
+        {
+          "value": "mobile",
+          "label": "Solo Mobile"
+        }
+      ],
+      "default": "both"
+    },
+    {
+      "type": "header",
+      "content": "Tabs derecha - Tab 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "tab_right_5_enabled",
+      "label": "Activar tab",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "tab_right_5_text",
+      "label": "Texto"
+    },
+    {
+      "type": "url",
+      "id": "tab_right_5_url",
+      "label": "URL"
+    },
+    {
+      "type": "select",
+      "id": "tab_right_5_visibility",
+      "label": "Visibilidad",
+      "options": [
+        {
+          "value": "both",
+          "label": "Mobile y Desktop"
+        },
+        {
+          "value": "desktop",
+          "label": "Solo Desktop"
+        },
+        {
+          "value": "mobile",
+          "label": "Solo Mobile"
+        }
+      ],
+      "default": "both"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tabs de navegación"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,444 @@
+{% doc %}
+  @prompt
+    Tabs de navegación en el header. que pueda poner textos a la izuquierda y derecha NO en el centro. 
+    Que pueda editar la tipografia y que cuando este en una pestaña se subtaye, quiero que los link esten subrayados solo cuando se seleccionen, agregar esto: Subrayado activo
+    Mostrar subrayado en pestaña activa crear dos versiones de cada tab, una para desktop y otra para mobile que puedas controlar independientemente. . 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-header-tabs-{{ ai_gen_id }} {
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    display: block;
+  }
+
+  .ai-header-tabs__container-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+  }
+
+  .ai-header-tabs__left-{{ ai_gen_id }},
+  .ai-header-tabs__right-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.tab_spacing }}px;
+    align-items: center;
+  }
+
+  .ai-header-tabs__left-{{ ai_gen_id }} {
+    justify-content: flex-start;
+  }
+
+  .ai-header-tabs__right-{{ ai_gen_id }} {
+    justify-content: flex-end;
+  }
+
+  .ai-header-tabs__link-{{ ai_gen_id }} {
+    font-family: {{ block.settings.font_family.family }}, {{ block.settings.font_family.fallback_families }};
+    font-weight: {{ block.settings.font_family.weight }};
+    font-style: {{ block.settings.font_family.style }};
+    font-size: {{ block.settings.font_size }}px;
+    color: {{ block.settings.text_color }};
+    text-decoration: none;
+    padding-bottom: 4px;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .ai-header-tabs__link-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.text_hover_color }};
+  }
+
+  .ai-header-tabs__link-{{ ai_gen_id }}.active {
+    {% if block.settings.show_active_underline %}
+      border-bottom-color: {{ block.settings.active_underline_color }};
+    {% endif %}
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-header-tabs__container-{{ ai_gen_id }} {
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .ai-header-tabs__left-{{ ai_gen_id }},
+    .ai-header-tabs__right-{{ ai_gen_id }} {
+      width: 100%;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: {{ block.settings.mobile_tab_spacing }}px;
+    }
+
+    .ai-header-tabs__link-{{ ai_gen_id }} {
+      font-size: {{ block.settings.mobile_font_size }}px;
+    }
+  }
+{% endstyle %}
+
+<header-tabs-{{ ai_gen_id }}
+  class="ai-header-tabs-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <nav class="ai-header-tabs__container-{{ ai_gen_id }}">
+    <div class="ai-header-tabs__left-{{ ai_gen_id }}">
+      {% for i in (1..4) %}
+        {% liquid
+          assign desktop_text_key = 'desktop_left_tab_' | append: i | append: '_text'
+          assign desktop_url_key = 'desktop_left_tab_' | append: i | append: '_url'
+          assign desktop_text = block.settings[desktop_text_key]
+          assign desktop_url = block.settings[desktop_url_key]
+        %}
+        {% if desktop_text != blank %}
+          <a
+            href="{{ desktop_url }}"
+            class="ai-header-tabs__link-{{ ai_gen_id }} ai-header-tabs__link-desktop-{{ ai_gen_id }}"
+            data-url="{{ desktop_url }}"
+          >
+            {{ desktop_text }}
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="ai-header-tabs__right-{{ ai_gen_id }}">
+      {% for i in (1..4) %}
+        {% liquid
+          assign desktop_text_key = 'desktop_right_tab_' | append: i | append: '_text'
+          assign desktop_url_key = 'desktop_right_tab_' | append: i | append: '_url'
+          assign desktop_text = block.settings[desktop_text_key]
+          assign desktop_url = block.settings[desktop_url_key]
+        %}
+        {% if desktop_text != blank %}
+          <a
+            href="{{ desktop_url }}"
+            class="ai-header-tabs__link-{{ ai_gen_id }} ai-header-tabs__link-desktop-{{ ai_gen_id }}"
+            data-url="{{ desktop_url }}"
+          >
+            {{ desktop_text }}
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </nav>
+</header-tabs-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class HeaderTabs{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.links = this.querySelectorAll('.ai-header-tabs__link-{{ ai_gen_id }}');
+        this.setActiveTab();
+      }
+
+      setActiveTab() {
+        const currentPath = window.location.pathname;
+        
+        this.links.forEach((link) => {
+          const linkUrl = link.getAttribute('data-url');
+          
+          if (linkUrl && currentPath === linkUrl) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }
+    }
+
+    customElements.define('header-tabs-{{ ai_gen_id }}', HeaderTabs{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Header tabs",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Desktop - Left tabs"
+    },
+    {
+      "type": "text",
+      "id": "desktop_left_tab_1_text",
+      "label": "Tab 1 text"
+    },
+    {
+      "type": "url",
+      "id": "desktop_left_tab_1_url",
+      "label": "Tab 1 link"
+    },
+    {
+      "type": "text",
+      "id": "desktop_left_tab_2_text",
+      "label": "Tab 2 text"
+    },
+    {
+      "type": "url",
+      "id": "desktop_left_tab_2_url",
+      "label": "Tab 2 link"
+    },
+    {
+      "type": "text",
+      "id": "desktop_left_tab_3_text",
+      "label": "Tab 3 text"
+    },
+    {
+      "type": "url",
+      "id": "desktop_left_tab_3_url",
+      "label": "Tab 3 link"
+    },
+    {
+      "type": "text",
+      "id": "desktop_left_tab_4_text",
+      "label": "Tab 4 text"
+    },
+    {
+      "type": "url",
+      "id": "desktop_left_tab_4_url",
+      "label": "Tab 4 link"
+    },
+    {
+      "type": "header",
+      "content": "Desktop - Right tabs"
+    },
+    {
+      "type": "text",
+      "id": "desktop_right_tab_1_text",
+      "label": "Tab 1 text"
+    },
+    {
+      "type": "url",
+      "id": "desktop_right_tab_1_url",
+      "label": "Tab 1 link"
+    },
+    {
+      "type": "text",
+      "id": "desktop_right_tab_2_text",
+      "label": "Tab 2 text"
+    },
+    {
+      "type": "url",
+      "id": "desktop_right_tab_2_url",
+      "label": "Tab 2 link"
+    },
+    {
+      "type": "text",
+      "id": "desktop_right_tab_3_text",
+      "label": "Tab 3 text"
+    },
+    {
+      "type": "url",
+      "id": "desktop_right_tab_3_url",
+      "label": "Tab 3 link"
+    },
+    {
+      "type": "text",
+      "id": "desktop_right_tab_4_text",
+      "label": "Tab 4 text"
+    },
+    {
+      "type": "url",
+      "id": "desktop_right_tab_4_url",
+      "label": "Tab 4 link"
+    },
+    {
+      "type": "header",
+      "content": "Mobile - Left tabs"
+    },
+    {
+      "type": "text",
+      "id": "mobile_left_tab_1_text",
+      "label": "Tab 1 text"
+    },
+    {
+      "type": "url",
+      "id": "mobile_left_tab_1_url",
+      "label": "Tab 1 link"
+    },
+    {
+      "type": "text",
+      "id": "mobile_left_tab_2_text",
+      "label": "Tab 2 text"
+    },
+    {
+      "type": "url",
+      "id": "mobile_left_tab_2_url",
+      "label": "Tab 2 link"
+    },
+    {
+      "type": "text",
+      "id": "mobile_left_tab_3_text",
+      "label": "Tab 3 text"
+    },
+    {
+      "type": "url",
+      "id": "mobile_left_tab_3_url",
+      "label": "Tab 3 link"
+    },
+    {
+      "type": "text",
+      "id": "mobile_left_tab_4_text",
+      "label": "Tab 4 text"
+    },
+    {
+      "type": "url",
+      "id": "mobile_left_tab_4_url",
+      "label": "Tab 4 link"
+    },
+    {
+      "type": "header",
+      "content": "Mobile - Right tabs"
+    },
+    {
+      "type": "text",
+      "id": "mobile_right_tab_1_text",
+      "label": "Tab 1 text"
+    },
+    {
+      "type": "url",
+      "id": "mobile_right_tab_1_url",
+      "label": "Tab 1 link"
+    },
+    {
+      "type": "text",
+      "id": "mobile_right_tab_2_text",
+      "label": "Tab 2 text"
+    },
+    {
+      "type": "url",
+      "id": "mobile_right_tab_2_url",
+      "label": "Tab 2 link"
+    },
+    {
+      "type": "text",
+      "id": "mobile_right_tab_3_text",
+      "label": "Tab 3 text"
+    },
+    {
+      "type": "url",
+      "id": "mobile_right_tab_3_url",
+      "label": "Tab 3 link"
+    },
+    {
+      "type": "text",
+      "id": "mobile_right_tab_4_text",
+      "label": "Tab 4 text"
+    },
+    {
+      "type": "url",
+      "id": "mobile_right_tab_4_url",
+      "label": "Tab 4 link"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "font_family",
+      "label": "Font",
+      "default": "archivo_n4"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Desktop font size",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "mobile_font_size",
+      "label": "Mobile font size",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_hover_color",
+      "label": "Text hover color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Active underline"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_active_underline",
+      "label": "Show underline on active tab",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "active_underline_color",
+      "label": "Active underline color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "tab_spacing",
+      "label": "Desktop tab spacing",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "mobile_tab_spacing",
+      "label": "Mobile tab spacing",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header tabs"
+    }
+  ]
+}
+{% endschema %}

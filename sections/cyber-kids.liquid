@@ -1,0 +1,205 @@
+{% comment %}
+  SECCIÓN: Cyber Kids y Accesorios
+  Archivo: sections/cyber-kids.liquid
+  Descripción: Sección kids, accesorios y FR Label con botones
+{% endcomment %}
+
+<style>
+  .cyber-kids {
+    padding: 60px 20px;
+    background-color: {{ section.settings.bg_color }};
+  }
+
+  .cyber-kids__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .cyber-kids__label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 8px;
+  }
+
+  .cyber-kids__title {
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 700;
+    color: {{ section.settings.text_color }};
+    margin: 0 0 8px;
+  }
+
+  .cyber-kids__desc {
+    font-size: 14px;
+    color: #666;
+    margin: 0 0 28px;
+    max-width: 520px;
+  }
+
+  .cyber-kids__buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 36px;
+  }
+
+  .cyber-kids__btn {
+    display: inline-block;
+    padding: 12px 24px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 2px solid {{ section.settings.text_color }};
+    transition: all 0.2s ease;
+  }
+
+  .cyber-kids__btn--primary {
+    background-color: {{ section.settings.text_color }};
+    color: {{ section.settings.bg_color }};
+  }
+
+  .cyber-kids__btn--primary:hover {
+    background-color: transparent;
+    color: {{ section.settings.text_color }};
+  }
+
+  .cyber-kids__btn--outline {
+    background-color: transparent;
+    color: {{ section.settings.text_color }};
+  }
+
+  .cyber-kids__btn--outline:hover {
+    background-color: {{ section.settings.text_color }};
+    color: {{ section.settings.bg_color }};
+  }
+
+  .cyber-kids__btn--special {
+    background-color: transparent;
+    color: {{ section.settings.text_color }};
+    border-color: #aaa;
+  }
+
+  @media (max-width: 560px) {
+    .cyber-kids__buttons {
+      flex-direction: column;
+    }
+    .cyber-kids__btn {
+      text-align: center;
+    }
+  }
+</style>
+
+<section class="cyber-kids" id="cyber-kids-{{ section.id }}">
+  <div class="cyber-kids__inner">
+
+    {% if section.settings.label != blank %}
+      <span class="cyber-kids__label">{{ section.settings.label }}</span>
+    {% endif %}
+    {% if section.settings.title != blank %}
+      <h2 class="cyber-kids__title">{{ section.settings.title }}</h2>
+    {% endif %}
+    {% if section.settings.description != blank %}
+      <p class="cyber-kids__desc">{{ section.settings.description }}</p>
+    {% endif %}
+
+    <div class="cyber-kids__buttons">
+      {% if section.settings.btn1_text != blank %}
+        <a href="{{ section.settings.btn1_link }}" class="cyber-kids__btn cyber-kids__btn--primary">
+          {{ section.settings.btn1_text }}
+        </a>
+      {% endif %}
+      {% if section.settings.btn2_text != blank %}
+        <a href="{{ section.settings.btn2_link }}" class="cyber-kids__btn cyber-kids__btn--outline">
+          {{ section.settings.btn2_text }}
+        </a>
+      {% endif %}
+      {% if section.settings.btn3_text != blank %}
+        <a href="{{ section.settings.btn3_link }}" class="cyber-kids__btn cyber-kids__btn--special">
+          {{ section.settings.btn3_text }}
+        </a>
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cyber Kids y Accesorios",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Etiqueta",
+      "default": "TAMBIÉN EN CYBER"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Kids y Accesorios con Descuento"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Descripción",
+      "default": "Ropa para niños y accesorios para complementar tu look. Todo con los descuentos del Cyber Day Froens."
+    },
+    {
+      "type": "text",
+      "id": "btn1_text",
+      "label": "Botón 1 - Texto",
+      "default": "VER ROPA KIDS"
+    },
+    {
+      "type": "url",
+      "id": "btn1_link",
+      "label": "Botón 1 - Link"
+    },
+    {
+      "type": "text",
+      "id": "btn2_text",
+      "label": "Botón 2 - Texto",
+      "default": "VER ACCESORIOS"
+    },
+    {
+      "type": "url",
+      "id": "btn2_link",
+      "label": "Botón 2 - Link"
+    },
+    {
+      "type": "text",
+      "id": "btn3_text",
+      "label": "Botón 3 - Texto",
+      "default": "FR LABEL - PREMIUM"
+    },
+    {
+      "type": "url",
+      "id": "btn3_link",
+      "label": "Botón 3 - Link"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Color de fondo",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color del texto",
+      "default": "#000000"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Cyber Kids y Accesorios"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,225 @@
+{% comment %}
+  SECCIÓN: Cyber FAQ
+  Archivo: sections/cyber-faq.liquid
+  Descripción: Preguntas frecuentes Cyber Day Froens
+{% endcomment %}
+
+<style>
+  .cyber-faq {
+    padding: 60px 20px;
+    background-color: {{ section.settings.bg_color }};
+  }
+  .cyber-faq__inner {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .cyber-faq__label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .cyber-faq__title {
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 700;
+    color: {{ section.settings.text_color }};
+    margin: 0 0 8px;
+    text-align: center;
+  }
+  .cyber-faq__desc {
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    margin: 0 0 40px;
+  }
+  .cyber-faq__list {
+    border-top: 1px solid #e0e0e0;
+  }
+  .cyber-faq__item {
+    border-bottom: 1px solid #e0e0e0;
+  }
+  .cyber-faq__question {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    text-align: left;
+    font-size: 15px;
+    font-weight: 500;
+    color: {{ section.settings.text_color }};
+    gap: 16px;
+  }
+  .cyber-faq__question:hover { color: #555; }
+  .cyber-faq__icon {
+    flex-shrink: 0;
+    font-size: 20px;
+    font-weight: 300;
+    transition: transform 0.2s ease;
+    color: #888;
+  }
+  .cyber-faq__item.is-open .cyber-faq__icon {
+    transform: rotate(45deg);
+  }
+  .cyber-faq__answer {
+    display: none;
+    padding: 0 0 20px;
+    font-size: 14px;
+    color: #555;
+    line-height: 1.7;
+  }
+  .cyber-faq__item.is-open .cyber-faq__answer {
+    display: block;
+  }
+</style>
+
+<section class="cyber-faq" id="cyber-faq-{{ section.id }}">
+  <div class="cyber-faq__inner">
+    {% if section.settings.label != blank %}
+      <span class="cyber-faq__label">{{ section.settings.label }}</span>
+    {% endif %}
+    {% if section.settings.title != blank %}
+      <h2 class="cyber-faq__title">{{ section.settings.title }}</h2>
+    {% endif %}
+    {% if section.settings.description != blank %}
+      <p class="cyber-faq__desc">{{ section.settings.description }}</p>
+    {% endif %}
+    <div class="cyber-faq__list">
+      {% for block in section.blocks %}
+        <div class="cyber-faq__item" {{ block.shopify_attributes }}>
+          <button class="cyber-faq__question" aria-expanded="false">
+            {{ block.settings.question }}
+            <span class="cyber-faq__icon">+</span>
+          </button>
+          <div class="cyber-faq__answer">
+            {{ block.settings.answer }}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll('#cyber-faq-{{ section.id }} .cyber-faq__question').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var item = this.closest('.cyber-faq__item');
+      var isOpen = item.classList.contains('is-open');
+      document.querySelectorAll('#cyber-faq-{{ section.id }} .cyber-faq__item').forEach(function(el) {
+        el.classList.remove('is-open');
+        el.querySelector('.cyber-faq__question').setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        item.classList.add('is-open');
+        this.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Cyber FAQ",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Etiqueta",
+      "default": "PREGUNTAS FRECUENTES"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Todo lo que Necesitas Saber del Cyber Day Froens"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Descripción",
+      "default": "Respondemos las preguntas más comunes para que tu experiencia de compra sea perfecta."
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Color de fondo",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color del texto",
+      "default": "#000000"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "pregunta",
+      "name": "Pregunta",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Pregunta",
+          "default": "¿Cuándo es el Cyber Day en Froens?"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "Respuesta",
+          "default": "El Cyber Day Froens se realiza en junio 2026."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Cyber FAQ",
+      "blocks": [
+        {
+          "type": "pregunta",
+          "settings": {
+            "question": "¿Cuándo es el Cyber Day en Froens?",
+            "answer": "El Cyber Day Froens se realiza durante los días oficiales del evento en junio 2026. Las ofertas están disponibles online en froens.cl y en todas nuestras tiendas físicas."
+          }
+        },
+        {
+          "type": "pregunta",
+          "settings": {
+            "question": "¿Tienen despacho express durante el Cyber Day?",
+            "answer": "Sí, ofrecemos despacho express en 3 horas en Santiago, Viña del Mar, Concepción, Osorno y Puerto Varas. Para el resto del país, el envío es gratis en compras sobre $59.990."
+          }
+        },
+        {
+          "type": "pregunta",
+          "settings": {
+            "question": "¿Puedo retirar mi compra en una tienda física?",
+            "answer": "Sí, puedes comprar online y retirar en cualquiera de nuestras tiendas Froens el mismo día."
+          }
+        },
+        {
+          "type": "pregunta",
+          "settings": {
+            "question": "¿La ropa Froens es sustentable?",
+            "answer": "El 68% de nuestra colección usa materiales responsables: algodón orgánico, nylon reciclado, poliéster reciclado y fibras naturales."
+          }
+        },
+        {
+          "type": "pregunta",
+          "settings": {
+            "question": "¿Puedo hacer cambios en compras del Cyber Day?",
+            "answer": "Sí, tienes 60 días para realizar cambios si la talla no es la correcta. El cambio es gratuito en tiendas físicas."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,174 @@
+{%- comment -%}
+  search-collection-suggestions.liquid
+  Muestra accesos directos a colecciones según el término buscado.
+  Para agregar/quitar términos, edita solo este archivo.
+  Uso: {%- render 'search-collection-suggestions', terms: terms -%}
+{%- endcomment -%}
+
+{%- liquid
+  assign t = terms | downcase | strip
+  assign show = false
+  assign sg = ''
+-%}
+
+{%- if t contains 'polera' -%}
+  {%- if t contains 'manga larga' -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/poleras-manga-larga" class="cs-pill">Poleras Manga Larga →</a>{%- endcapture -%}
+  {%- elsif t contains 'hombre' -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/poleras-hombre-froens" class="cs-pill">Poleras Hombre →</a>{%- endcapture -%}
+  {%- elsif t contains 'mujer' -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/polera-mujer" class="cs-pill">Poleras Mujer →</a>{%- endcapture -%}
+  {%- else -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/poleras-hombre-froens" class="cs-pill">Poleras Hombre →</a><a href="/collections/polera-mujer" class="cs-pill">Poleras Mujer →</a>{%- endcapture -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- if t contains 'blusa' -%}
+  {%- assign show = true -%}
+  {%- capture sg -%}{{ sg }}<a href="/collections/blusas-mujer" class="cs-pill">Blusas Mujer →</a>{%- endcapture -%}
+{%- endif -%}
+
+{%- if t contains 'chaqueta' or t contains 'parka' -%}
+  {%- if t contains 'hombre' -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/chaquetas-y-parkas-hombre" class="cs-pill">Chaquetas Hombre →</a>{%- endcapture -%}
+  {%- elsif t contains 'mujer' -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/chaquetas-y-parkas-mujer" class="cs-pill">Chaquetas Mujer →</a>{%- endcapture -%}
+  {%- else -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/chaquetas-y-parkas-hombre" class="cs-pill">Chaquetas Hombre →</a><a href="/collections/chaquetas-y-parkas-mujer" class="cs-pill">Chaquetas Mujer →</a>{%- endcapture -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- if t contains 'blazer' -%}
+  {%- assign show = true -%}
+  {%- capture sg -%}{{ sg }}<a href="/collections/chaquetas-y-parkas-mujer" class="cs-pill">Chaquetas y Blazer Mujer →</a>{%- endcapture -%}
+{%- endif -%}
+
+{%- if t contains 'poleron' or t contains 'polerón' -%}
+  {%- if t contains 'hombre' -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/poleron-hombre-froens" class="cs-pill">Polerones Hombre →</a>{%- endcapture -%}
+  {%- elsif t contains 'mujer' -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/chalecos-polerones-y-polar-mujer" class="cs-pill">Polerones Mujer →</a>{%- endcapture -%}
+  {%- else -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/poleron-hombre-froens" class="cs-pill">Polerones Hombre →</a><a href="/collections/chalecos-polerones-y-polar-mujer" class="cs-pill">Polerones Mujer →</a>{%- endcapture -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- if t contains 'chaleco' -%}
+  {%- if t contains 'hombre' -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/chaleco-hombre-froens" class="cs-pill">Chalecos Hombre →</a>{%- endcapture -%}
+  {%- elsif t contains 'mujer' -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/chalecos-polerones-y-polar-mujer" class="cs-pill">Chalecos Mujer →</a>{%- endcapture -%}
+  {%- else -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/chaleco-hombre-froens" class="cs-pill">Chalecos Hombre →</a><a href="/collections/chalecos-polerones-y-polar-mujer" class="cs-pill">Chalecos Mujer →</a>{%- endcapture -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- if t contains 'polar' -%}
+  {%- if t contains 'hombre' -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/polar-hombre" class="cs-pill">Polar Hombre →</a>{%- endcapture -%}
+  {%- elsif t contains 'mujer' -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/chalecos-polerones-y-polar-mujer" class="cs-pill">Polar Mujer →</a>{%- endcapture -%}
+  {%- else -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/polar-hombre" class="cs-pill">Polar Hombre →</a><a href="/collections/chalecos-polerones-y-polar-mujer" class="cs-pill">Polar Mujer →</a>{%- endcapture -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- if t contains 'camisa' -%}
+  {%- if t contains 'mujer' -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/mujer" class="cs-pill">Ver Mujer →</a>{%- endcapture -%}
+  {%- else -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/camisa-hombre-froens" class="cs-pill">Camisas Hombre →</a>{%- endcapture -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- if t contains 'traje de ba' -%}
+  {%- if t contains 'hombre' -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/traje-de-bano-hombre-froens" class="cs-pill">Trajes de Baño Hombre →</a>{%- endcapture -%}
+  {%- elsif t contains 'mujer' -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/bikinis-y-trajes-de-bano-mujer" class="cs-pill">Bikinis y Trajes Mujer →</a>{%- endcapture -%}
+  {%- else -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/traje-de-bano-hombre-froens" class="cs-pill">Trajes de Baño Hombre →</a><a href="/collections/bikinis-y-trajes-de-bano-mujer" class="cs-pill">Bikinis y Trajes Mujer →</a>{%- endcapture -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- if t contains 'bikini' -%}
+  {%- assign show = true -%}
+  {%- capture sg -%}{{ sg }}<a href="/collections/bikinis-y-trajes-de-bano-mujer" class="cs-pill">Bikinis y Trajes de Baño →</a>{%- endcapture -%}
+{%- endif -%}
+
+{%- if t contains 'pantalon' or t contains 'pantalón' -%}
+  {%- if t contains 'hombre' -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/pantalon-hombre-froens" class="cs-pill">Pantalones Hombre →</a>{%- endcapture -%}
+  {%- elsif t contains 'mujer' -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/pantalon-mujer-froens" class="cs-pill">Pantalones Mujer →</a>{%- endcapture -%}
+  {%- else -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/pantalon-hombre-froens" class="cs-pill">Pantalones Hombre →</a><a href="/collections/pantalon-mujer-froens" class="cs-pill">Pantalones Mujer →</a>{%- endcapture -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- if t contains 'short' -%}
+  {%- if t contains 'hombre' -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/shorts-hombre-froens" class="cs-pill">Shorts Hombre →</a>{%- endcapture -%}
+  {%- elsif t contains 'mujer' -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/faldas-y-short" class="cs-pill">Faldas y Short →</a>{%- endcapture -%}
+  {%- else -%}
+    {%- assign show = true -%}
+    {%- capture sg -%}{{ sg }}<a href="/collections/shorts-hombre-froens" class="cs-pill">Shorts Hombre →</a><a href="/collections/faldas-y-short" class="cs-pill">Faldas y Short →</a>{%- endcapture -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- if t contains 'falda' -%}
+  {%- assign show = true -%}
+  {%- capture sg -%}{{ sg }}<a href="/collections/faldas-y-short" class="cs-pill">Faldas y Short →</a>{%- endcapture -%}
+{%- endif -%}
+
+{%- if t contains 'vestido' -%}
+  {%- assign show = true -%}
+  {%- capture sg -%}{{ sg }}<a href="/collections/vestidos-y-enteritos" class="cs-pill">Vestidos →</a>{%- endcapture -%}
+{%- endif -%}
+
+{%- if t contains 'gorro' or t contains 'jockey' or t contains 'bufanda' -%}
+  {%- assign show = true -%}
+  {%- capture sg -%}{{ sg }}<a href="/collections/accesorios" class="cs-pill">Accesorios →</a>{%- endcapture -%}
+{%- endif -%}
+
+{%- if show -%}
+  <style>
+    .search-cs{padding:10px 16px 0;border-bottom:1px solid rgba(0,0,0,.08);margin-bottom:4px}
+    .search-cs__label{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#999;margin-bottom:8px;display:block}
+    .search-cs__pills{display:flex;flex-wrap:wrap;gap:6px;padding-bottom:10px}
+    .cs-pill{display:inline-flex;align-items:center;padding:9px 14px;background:#1a1a2e;color:#fff!important;border-radius:3px;font-size:13px;font-family:inherit;text-decoration:none!important;white-space:nowrap;min-height:40px;line-height:1;transition:background .15s}
+    .cs-pill:hover,.cs-pill:focus{background:#333;color:#fff!important;text-decoration:none!important}
+    @media(max-width:767px){.cs-pill{font-size:14px;padding:11px 16px;min-height:44px}}
+  </style>
+  <div class="search-cs">
+    <span class="search-cs__label">Ir a colección</span>
+    <div class="search-cs__pills">{{ sg }}</div>
+  </div>
+{%- endif -%}

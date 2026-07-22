@@ -1,0 +1,103 @@
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script>
+    function consultarPuntos(){
+      if(checkRut(document.getElementById('rut'))){
+        $.ajax({
+          url:"https://froens.gaea.cl/ws/api/puntos.php",
+          type:"POST",
+          headers: { 
+             "Api-Key": "c8ad5d87-1c2f-11ef-96a9-b47af1eac9a8"
+          },
+          data:{ codigo: $('#rut').val() },
+          dataType:"json",
+          success: function(rsp) {
+             $("#mensaje").html("Tienes " + String(rsp.data.puntos) + " puntos");
+          },
+          error: function(jqXHR,mensaje,error) {
+             console.log(error);
+          }
+        });
+      }
+      else {
+        console.log("Rut no valido");
+      }
+    }
+    function checkRut(rut) {
+    // Despejar Puntos
+    var valor = rut.value.replace('.','');
+    // Despejar Guión
+    valor = valor.replace('-','');
+    
+    // Aislar Cuerpo y Dígito Verificador
+    cuerpo = valor.slice(0,-1);
+    dv = valor.slice(-1).toUpperCase();
+    
+    // Formatear RUN
+    rut.value = cuerpo + '-'+ dv
+    
+    // Si no cumple con el mínimo ej. (n.nnn.nnn)
+    if(cuerpo.length < 7) {  $("#mensaje").html("Rut incompleto"); return false;}
+    else {
+      $("#mensaje").html("");
+    }
+    // Calcular Dígito Verificador
+    suma = 0;
+    multiplo = 2;
+    
+    // Para cada dígito del Cuerpo
+    for(i=1;i<=cuerpo.length;i++) {
+    
+        // Obtener su Producto con el Múltiplo Correspondiente
+        index = multiplo * valor.charAt(cuerpo.length - i);
+        
+        // Sumar al Contador General
+        suma = suma + index;
+        
+        // Consolidar Múltiplo dentro del rango [2,7]
+        if(multiplo < 7) { multiplo = multiplo + 1; } else { multiplo = 2; }
+  
+    }
+    
+    // Calcular Dígito Verificador en base al Módulo 11
+    dvEsperado = 11 - (suma % 11);
+    
+    // Casos Especiales (0 y K)
+    dv = (dv == 'K')?10:dv;
+    dv = (dv == 0)?11:dv;
+    
+    // Validar que el Cuerpo coincide con su Dígito Verificador
+    if(dvEsperado != dv) { 
+      $("#mensaje").html("El Rut ingresado no es valido"); 
+      return false; 
+    }
+    
+    // Si todo sale bien, eliminar errores (decretar que es válido)
+    $("#mensaje").html("RUT valido");
+    return true;
+  }
+</script>
+
+<div class="full__page__form__wrapper">
+  <div class="wrapper">
+    <div class="float-grid">
+      <div class="grid__item medium-up--one-half medium-up--push-one-quarter text-center">
+        <div class="full__page__form">
+          <div class="section-header text-center">
+            <h5>Consulta tus puntos</h5>
+          </div>
+          <div class="rte">
+            {{ page.content }}
+          </div>
+          <div>
+            <form class="text-center">
+              <p>Ingresa tu RUT</p>
+              <input type="text" id="rut" name="rut" required oninput="checkRut(this)" placeholder="Ej. 11111111-1"><br><br>
+              <p id="mensaje"></p>
+              <button onclick="consultarPuntos();" class="btn--outline btn--full" type="button">Mostrar puntos</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

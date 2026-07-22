@@ -1,0 +1,160 @@
+<!-- /sections/seguimiento-pedidos.liquid -->
+<style>
+  #mensaje.error{
+    color:#FF0033;
+  }
+.seguimiento-pedidos .contenedor {
+
+}
+.seguimiento-pedidos .contenedor input[type=text],
+  .seguimiento-pedidos .contenedor input[type=email]{
+  width:100%;
+  display:inline-block;
+}
+@media only screen and (min-width: 768px) {
+  .seguimiento-pedidos .contenedor input[type=text],
+  .seguimiento-pedidos .contenedor input[type=email]{
+    width:49%;
+  }
+}
+</style>
+<div class="seguimiento-pedidos"
+  style="--PT: {{ section.settings.padding_top }}px; --PB: {{ section.settings.padding_bottom }}px;">
+  <div class="{{ section.settings.width }} section-padding">
+    <div class="contenedor">
+        <form action="">          
+            <input type="text" id="pedido" name="pedido" value="" placeholder="N. Pedido" required />
+            <input type="email" id="correoElectronico" name="correoElectronico" placeholder="Correo Electrónico" pattern=".+@example\.com" size="30" required />
+            <input type="button" id="buscar" value="BUSCAR" class="btn--neutral btn">
+            <p id="mensaje"></p>
+        </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  defer(function () {
+    // console.log("jQuery is now loaded");
+  });
+
+  function defer(method) {
+    if (window.jQuery) {
+      //console.log("jQuery is now loaded");
+      function limpiar(){
+        $('#mensaje').empty();
+        $('#mensaje').removeClass('error');
+      }
+      // Document Ready
+      $(function() {
+        //console.log("Document Ready!!");
+        $('#buscar').on('click',function() {
+          limpiar();
+          if($('#pedido').val()=='') {
+            $('#mensaje').addClass('error');
+            $('#mensaje').html('Debe ingresar el número de pedido');
+            return false;
+          }
+          if($('#correoElectronico').val()=='') {
+            $('#mensaje').addClass('error');
+            $('#mensaje').html('Debe ingresar el Correo Electrónico');
+            return false;
+          }
+
+          var data=new FormData();      
+          data.append('pedido',$('#pedido').val());
+          data.append('correo',$('#correoElectronico').val());
+
+          $.ajax({
+              contentType: false,
+              processData: false,
+              dataType: 'json',
+              type: 'POST',
+              data: data,              
+              url: 'https://froens.gaea.cl/ws/api/shopify/fulfillment.php',
+              success: function (rsp) {
+                if(rsp.codigo==0) {
+                      limpiar();
+                      // console.log(rsp.data[0].url);
+                      let isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+                      if (isSafari) {
+                        //alert("S");
+                        window.open(rsp.data[0].url, '_self');
+                      }
+                      else {
+                        window.open(rsp.data[0].url, '_blank');  
+                      }                      
+                }
+                else {
+                  limpiar();
+                  $('#mensaje').addClass('error');
+                  $('#mensaje').html(rsp.titulo);
+                }
+              },
+              error: function() {
+                
+              }
+          });  
+          
+        });
+
+      });
+      
+    } else {
+        setTimeout(function () { defer(method) }, 50);
+      }
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Seguimiento Pedidos",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section spacing"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "default": "wrapper",
+      "options": [
+        { "value": "wrapper--none", "label": "Full width" },
+        { "value": "wrapper--full", "label": "Full width padded" },
+        { "value": "wrapper", "label": "Page width" },
+        { "value": "wrapper--narrow", "label": "Page width narrow" },
+        { "value": "wrapper--tiny", "label": "Page width extra narrow" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 180,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 180,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "category": "Text",
+      "name": "Seguimiento Pedidos"
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header","footer","aside"]
+  }
+}
+{% endschema %}

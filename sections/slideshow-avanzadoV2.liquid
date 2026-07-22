@@ -1,0 +1,253 @@
+<style>
+  .sa-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+  .sa-track {
+    display: flex;
+    transition: transform 0.6s ease;
+  }
+  .sa-slide {
+    min-width: 100%;
+    position: relative;
+    display: block;
+  }
+  .sa-slide img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+ .sa-img-mobile { display: none !important; }
+@media (max-width: 768px) {
+  .sa-img-desktop { display: none !important; }
+  .sa-img-mobile { display: block !important; }
+}
+
+  .sa-content {
+    position: absolute;
+    z-index: 10;
+    pointer-events: all;
+    display: flex;
+    flex-direction: row;
+    gap: {{ section.settings.button_gap }}px;
+    top: {{ section.settings.button_position_vertical }}%;
+    left: {{ section.settings.button_position_horizontal }}%;
+    transform: translate(-50%, -50%);
+  }
+  .sa-btn {
+    display: inline-block;
+    padding: 12px 28px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+  }
+  .sa-btn-1 {
+    background: {{ section.settings.btn1_bg_color }};
+    color: {{ section.settings.btn1_text_color }};
+    border-color: {{ section.settings.btn1_bg_color }};
+  }
+  .sa-btn-2 {
+    background: {{ section.settings.btn2_bg_color }};
+    color: {{ section.settings.btn2_text_color }};
+    border-color: {{ section.settings.btn2_bg_color }};
+  }
+  .sa-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.8);
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 20;
+  }
+  .sa-arrow.prev { left: 12px; }
+  .sa-arrow.next { right: 12px; }
+  .sa-dots {
+    position: absolute;
+    bottom: 12px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    z-index: 20;
+  }
+  .sa-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    border: none;
+    cursor: pointer;
+  }
+  .sa-dot.active { background: #fff; }
+</style>
+
+{% assign total = 0 %}
+{% for i in (1..5) %}
+  {% assign key = 'slide' | append: i | append: '_image_desktop' %}
+  {% if section.settings[key] != blank %}
+    {% assign total = total | plus: 1 %}
+  {% endif %}
+{% endfor %}
+
+{% if total > 0 %}
+<div class="sa-wrapper" id="sa-{{ section.id }}">
+  <div class="sa-track" id="sa-track-{{ section.id }}">
+    {% for i in (1..5) %}
+      {% assign key_d = 'slide' | append: i | append: '_image_desktop' %}
+      {% assign key_m = 'slide' | append: i | append: '_image_mobile' %}
+      {% assign key_l = 'slide' | append: i | append: '_link' %}
+      {% assign key_b1t = 'slide' | append: i | append: '_btn1_text' %}
+      {% assign key_b1l = 'slide' | append: i | append: '_btn1_link' %}
+      {% assign key_b2t = 'slide' | append: i | append: '_btn2_text' %}
+      {% assign key_b2l = 'slide' | append: i | append: '_btn2_link' %}
+
+      {% assign img_d = section.settings[key_d] %}
+      {% assign img_m = section.settings[key_m] %}
+      {% assign s_link = section.settings[key_l] %}
+      {% assign b1t = section.settings[key_b1t] %}
+      {% assign b1l = section.settings[key_b1l] %}
+      {% assign b2t = section.settings[key_b2t] %}
+      {% assign b2l = section.settings[key_b2l] %}
+
+      {% if img_d != blank %}
+  <div class="sa-slide">
+    {% if s_link != blank %}<a href="{{ s_link }}" style="display:block;">{% endif %}
+
+      {% if forloop.first %}
+        <img class="sa-img-desktop" src="{{ img_d | image_url: width: 1920 }}" alt="Slide {{ i }}" fetchpriority="high" loading="eager">
+      {% else %}
+        <img class="sa-img-desktop" src="{{ img_d | image_url: width: 1920 }}" alt="Slide {{ i }}">
+      {% endif %}
+
+      {% if img_m != blank %}
+        {% if forloop.first %}
+          <img class="sa-img-mobile" src="{{ img_m | image_url: width: 768 }}" alt="Slide {{ i }} mobile" fetchpriority="high" loading="eager">
+        {% else %}
+          <img class="sa-img-mobile" src="{{ img_m | image_url: width: 768 }}" alt="Slide {{ i }} mobile">
+        {% endif %}
+      {% else %}
+        {% if forloop.first %}
+          <img class="sa-img-mobile" src="{{ img_d | image_url: width: 768 }}" alt="Slide {{ i }} mobile" fetchpriority="high" loading="eager">
+        {% else %}
+          <img class="sa-img-mobile" src="{{ img_d | image_url: width: 768 }}" alt="Slide {{ i }} mobile">
+        {% endif %}
+      {% endif %}
+
+    {% if s_link != blank %}</a>{% endif %}
+
+    {% if b1t != blank or b2t != blank %}
+      <div class="sa-content">
+        {% if b1t != blank %}<a href="{{ b1l | default: '#' }}" class="sa-btn sa-btn-1">{{ b1t }}</a>{% endif %}
+        {% if b2t != blank %}<a href="{{ b2l | default: '#' }}" class="sa-btn sa-btn-2">{{ b2t }}</a>{% endif %}
+      </div>
+    {% endif %}
+  </div>
+{% endif %}
+    {% endfor %}
+  </div>
+
+  {% if total > 1 %}
+    <button class="sa-arrow prev" onclick="saPrev('{{ section.id }}')">&#8592;</button>
+    <button class="sa-arrow next" onclick="saNext('{{ section.id }}')">&#8594;</button>
+    <div class="sa-dots">
+      {% for i in (1..total) %}
+        <button class="sa-dot {% if forloop.first %}active{% endif %}" onclick="saGo('{{ section.id }}', {{ forloop.index0 }})"></button>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+
+<script>
+(function(){
+  var id = '{{ section.id }}';
+  var cur = 0;
+  var track = document.getElementById('sa-track-' + id);
+  var dots = document.querySelectorAll('#sa-' + id + ' .sa-dot');
+  var total = track ? track.children.length : 0;
+
+  function go(n) {
+    cur = (n + total) % total;
+    track.style.transform = 'translateX(-' + (cur * 100) + '%)';
+    dots.forEach(function(d,i){ d.classList.toggle('active', i===cur); });
+  }
+
+  window.saPrev = function(i){ if(i===id) go(cur-1); };
+  window.saNext = function(i){ if(i===id) go(cur+1); };
+  window.saGo   = function(i,n){ if(i===id) go(n); };
+
+  {% if section.settings.autoplay %}
+  setInterval(function(){ go(cur+1); }, {{ section.settings.autoplay_speed | times: 1000 }});
+  {% endif %}
+})();
+</script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Slideshow Avanzado",
+  "settings": [
+    { "type": "header", "content": "Slide 1" },
+    { "type": "image_picker", "id": "slide1_image_desktop", "label": "Imagen Desktop - Slide 1" },
+    { "type": "image_picker", "id": "slide1_image_mobile", "label": "Imagen Mobile - Slide 1" },
+    { "type": "url", "id": "slide1_link", "label": "Link Slide 1 (opcional)" },
+    { "type": "text", "id": "slide1_btn1_text", "label": "Botón 1 - Texto", "default": "Ver más" },
+    { "type": "url", "id": "slide1_btn1_link", "label": "Botón 1 - Link" },
+    { "type": "text", "id": "slide1_btn2_text", "label": "Botón 2 - Texto", "default": "Comprar" },
+    { "type": "url", "id": "slide1_btn2_link", "label": "Botón 2 - Link" },
+    { "type": "header", "content": "Slide 2" },
+    { "type": "image_picker", "id": "slide2_image_desktop", "label": "Imagen Desktop - Slide 2" },
+    { "type": "image_picker", "id": "slide2_image_mobile", "label": "Imagen Mobile - Slide 2" },
+    { "type": "url", "id": "slide2_link", "label": "Link Slide 2 (opcional)" },
+    { "type": "text", "id": "slide2_btn1_text", "label": "Botón 1 - Texto" },
+    { "type": "url", "id": "slide2_btn1_link", "label": "Botón 1 - Link" },
+    { "type": "text", "id": "slide2_btn2_text", "label": "Botón 2 - Texto" },
+    { "type": "url", "id": "slide2_btn2_link", "label": "Botón 2 - Link" },
+    { "type": "header", "content": "Slide 3" },
+    { "type": "image_picker", "id": "slide3_image_desktop", "label": "Imagen Desktop - Slide 3" },
+    { "type": "image_picker", "id": "slide3_image_mobile", "label": "Imagen Mobile - Slide 3" },
+    { "type": "url", "id": "slide3_link", "label": "Link Slide 3 (opcional)" },
+    { "type": "text", "id": "slide3_btn1_text", "label": "Botón 1 - Texto" },
+    { "type": "url", "id": "slide3_btn1_link", "label": "Botón 1 - Link" },
+    { "type": "text", "id": "slide3_btn2_text", "label": "Botón 2 - Texto" },
+    { "type": "url", "id": "slide3_btn2_link", "label": "Botón 2 - Link" },
+    { "type": "header", "content": "Slide 4" },
+    { "type": "image_picker", "id": "slide4_image_desktop", "label": "Imagen Desktop - Slide 4" },
+    { "type": "image_picker", "id": "slide4_image_mobile", "label": "Imagen Mobile - Slide 4" },
+    { "type": "url", "id": "slide4_link", "label": "Link Slide 4 (opcional)" },
+    { "type": "text", "id": "slide4_btn1_text", "label": "Botón 1 - Texto" },
+    { "type": "url", "id": "slide4_btn1_link", "label": "Botón 1 - Link" },
+    { "type": "text", "id": "slide4_btn2_text", "label": "Botón 2 - Texto" },
+    { "type": "url", "id": "slide4_btn2_link", "label": "Botón 2 - Link" },
+    { "type": "header", "content": "Slide 5" },
+    { "type": "image_picker", "id": "slide5_image_desktop", "label": "Imagen Desktop - Slide 5" },
+    { "type": "image_picker", "id": "slide5_image_mobile", "label": "Imagen Mobile - Slide 5" },
+    { "type": "url", "id": "slide5_link", "label": "Link Slide 5 (opcional)" },
+    { "type": "text", "id": "slide5_btn1_text", "label": "Botón 1 - Texto" },
+    { "type": "url", "id": "slide5_btn1_link", "label": "Botón 1 - Link" },
+    { "type": "text", "id": "slide5_btn2_text", "label": "Botón 2 - Texto" },
+    { "type": "url", "id": "slide5_btn2_link", "label": "Botón 2 - Link" },
+    { "type": "header", "content": "Configuración de botones" },
+    { "type": "range", "id": "button_position_vertical", "label": "Posición vertical (%)", "min": 10, "max": 90, "step": 5, "default": 75 },
+    { "type": "range", "id": "button_position_horizontal", "label": "Posición horizontal (%)", "min": 10, "max": 90, "step": 5, "default": 50 },
+    { "type": "range", "id": "button_gap", "label": "Espacio entre botones (px)", "min": 4, "max": 40, "step": 2, "default": 12 },
+    { "type": "color", "id": "btn1_bg_color", "label": "Botón 1 - Color fondo", "default": "#ffffff" },
+    { "type": "color", "id": "btn1_text_color", "label": "Botón 1 - Color texto", "default": "#000000" },
+    { "type": "color", "id": "btn2_bg_color", "label": "Botón 2 - Color fondo", "default": "#000000" },
+    { "type": "color", "id": "btn2_text_color", "label": "Botón 2 - Color texto", "default": "#ffffff" },
+    { "type": "header", "content": "Autoplay" },
+    { "type": "checkbox", "id": "autoplay", "label": "Activar autoplay", "default": true },
+    { "type": "range", "id": "autoplay_speed", "label": "Velocidad (segundos)", "min": 2, "max": 10, "step": 1, "default": 5 }
+  ],
+  "presets": [
+    { "name": "Slideshow Avanzado" }
+  ]
+}
+{% endschema %}

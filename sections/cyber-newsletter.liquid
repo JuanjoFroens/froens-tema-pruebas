@@ -1,0 +1,253 @@
+{% comment %}
+  SECCIÓN: Cyber Newsletter
+  Archivo: sections/cyber-newsletter.liquid
+  Descripción: Suscripción anticipada al Cyber Day → Klaviyo List TFMudL
+{% endcomment %}
+
+<style>
+  .cyber-newsletter {
+    padding: 70px 20px;
+    background-color: {{ section.settings.bg_color }};
+    text-align: center;
+  }
+
+  .cyber-newsletter__inner {
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .cyber-newsletter__title {
+    font-size: clamp(24px, 3.5vw, 38px);
+    font-weight: 700;
+    color: {{ section.settings.text_color }};
+    margin: 0 0 12px;
+    line-height: 1.1;
+  }
+
+  .cyber-newsletter__desc {
+    font-size: 14px;
+    color: {{ section.settings.text_secondary_color }};
+    margin: 0 0 28px;
+    line-height: 1.6;
+  }
+
+  .cyber-newsletter__form {
+    display: flex;
+    gap: 0;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  .cyber-newsletter__input {
+    flex: 1;
+    padding: 14px 16px;
+    font-size: 13px;
+    border: 1px solid {{ section.settings.border_color }};
+    background: {{ section.settings.input_bg_color }};
+    color: {{ section.settings.text_color }} !important;
+    outline: none;
+    border-right: none;
+  }
+
+  .cyber-newsletter__input::placeholder {
+    color: {{ section.settings.placeholder_color }};
+  }
+
+  .cyber-newsletter__input:focus {
+    border-color: {{ section.settings.text_color }};
+  }
+
+  .cyber-newsletter__btn {
+    padding: 14px 24px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid {{ section.settings.text_color }};
+    background-color: {{ section.settings.text_color }};
+    color: {{ section.settings.bg_color }};
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .cyber-newsletter__btn:hover {
+    opacity: 0.85;
+  }
+
+  .cyber-newsletter__msg {
+    margin-top: 16px;
+    font-size: 13px;
+    display: none;
+  }
+  .cyber-newsletter__msg.success { color: #4caf50; }
+  .cyber-newsletter__msg.error   { color: #f44336; }
+
+  @media (max-width: 480px) {
+    .cyber-newsletter__form {
+      flex-direction: column;
+    }
+    .cyber-newsletter__input {
+      border-right: 1px solid {{ section.settings.border_color }};
+      border-bottom: none;
+    }
+  }
+</style>
+
+<section class="cyber-newsletter" id="cyber-newsletter-{{ section.id }}">
+  <div class="cyber-newsletter__inner">
+
+    {% if section.settings.title != blank %}
+      <h2 class="cyber-newsletter__title">{{ section.settings.title }}</h2>
+    {% endif %}
+    {% if section.settings.description != blank %}
+      <p class="cyber-newsletter__desc">{{ section.settings.description }}</p>
+    {% endif %}
+
+    <div class="cyber-newsletter__form">
+      <input
+        type="email"
+        id="cyber-nl-email-{{ section.id }}"
+        class="cyber-newsletter__input"
+        placeholder="{{ section.settings.placeholder }}"
+        required
+      >
+      <button type="button" class="cyber-newsletter__btn" id="cyber-nl-btn-{{ section.id }}">
+        {{ section.settings.btn_text }}
+      </button>
+    </div>
+    <p class="cyber-newsletter__msg" id="cyber-nl-msg-{{ section.id }}"></p>
+
+  </div>
+</section>
+
+<script>
+(function() {
+  var btn   = document.getElementById('cyber-nl-btn-{{ section.id }}');
+  var input = document.getElementById('cyber-nl-email-{{ section.id }}');
+  var msg   = document.getElementById('cyber-nl-msg-{{ section.id }}');
+
+  btn.addEventListener('click', function() {
+    var email = input.value.trim();
+    if (!email || !email.includes('@')) {
+      msg.textContent = 'Por favor ingresa un correo válido.';
+      msg.className = 'cyber-newsletter__msg error';
+      msg.style.display = 'block';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = '...';
+
+    fetch('https://a.klaviyo.com/client/subscriptions/?company_id=JJ73yL', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'revision': '2023-12-15'
+      },
+      body: JSON.stringify({
+        data: {
+          type: 'subscription',
+          attributes: {
+            list_id: 'TFMudL',
+            email: email
+          }
+        }
+      })
+    })
+    .then(function(res) {
+      if (res.ok || res.status === 202) {
+        msg.textContent = '¡Listo! Te avisaremos antes que nadie cuando se venga algo grande.';
+        msg.className = 'cyber-newsletter__msg success';
+        input.value = '';
+        btn.textContent = '✓';
+      } else {
+        throw new Error('Error ' + res.status);
+      }
+    })
+    .catch(function() {
+      msg.textContent = 'Hubo un error. Intenta de nuevo.';
+      msg.className = 'cyber-newsletter__msg error';
+      btn.disabled = false;
+      btn.textContent = '{{ section.settings.btn_text }}';
+    })
+    .finally(function() {
+      msg.style.display = 'block';
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Cyber Newsletter",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Sé el Primero en Acceder a las Ofertas"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Descripción",
+      "default": "Suscríbete al newsletter de Froens y recibe acceso anticipado al Cyber Day más un 10% de descuento en tu primera compra."
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Placeholder del campo",
+      "default": "tu@correo.cl"
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Texto del botón",
+      "default": "SUSCRIBIRME"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Color de fondo",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color del texto principal",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_secondary_color",
+      "label": "Color texto secundario",
+      "default": "#aaaaaa"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Color borde input",
+      "default": "#444444"
+    },
+    {
+      "type": "color",
+      "id": "input_bg_color",
+      "label": "Color fondo input",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "placeholder_color",
+      "label": "Color placeholder",
+      "default": "#666666"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Cyber Newsletter"
+    }
+  ]
+}
+{% endschema %}

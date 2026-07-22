@@ -1,0 +1,422 @@
+{%- comment -%}
+  Froens Help Widget
+  Botón flotante con FAQ y handoff a WhatsApp.
+{%- endcomment -%}
+
+<style>
+  #froens-help-toggle,
+  #froens-help-panel {
+    font-family: 'Archivo', -apple-system, BlinkMacSystemFont, sans-serif;
+    box-sizing: border-box;
+  }
+  #froens-help-toggle *,
+  #froens-help-panel * { box-sizing: border-box; }
+
+  #froens-help-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #2f4937;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9998;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+    transition: transform 0.2s ease;
+  }
+  #froens-help-toggle:hover { transform: scale(1.05); }
+  #froens-help-toggle svg { width: 26px; height: 26px; }
+
+  #froens-help-panel {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 330px;
+    max-height: 80vh;
+    background: #ffffff;
+    border-radius: 2px;
+    border: 0.5px solid #2f4937;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.18);
+    overflow: hidden;
+    display: none;
+    flex-direction: column;
+    z-index: 9999;
+  }
+  #froens-help-panel.is-open { display: flex; }
+
+  #froens-help-panel .fhw-header {
+    background: #2f4937;
+    padding: 18px 20px 14px;
+    color: #ffffff;
+  }
+  #froens-help-panel .fhw-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  #froens-help-panel .fhw-title {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin: 0;
+  }
+  #froens-help-panel .fhw-close {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    padding: 4px;
+    cursor: pointer;
+    line-height: 1;
+  }
+  #froens-help-panel .fhw-close svg { width: 18px; height: 18px; }
+  #froens-help-panel .fhw-subtitle {
+    font-size: 12px;
+    color: #b5aa79;
+    letter-spacing: 0.04em;
+    margin: 0;
+  }
+
+  #froens-help-panel .fhw-body {
+    padding: 14px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: #ffffff;
+  }
+
+  #froens-help-panel a.fhw-link {
+    text-decoration: none;
+    color: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 14px;
+    border-radius: 2px;
+    border-bottom: 0.5px solid #f7f5f4;
+    transition: background 0.15s ease;
+  }
+  #froens-help-panel a.fhw-link:hover { background: #f7f5f4; }
+  #froens-help-panel a.fhw-link .fhw-link-inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  #froens-help-panel a.fhw-link svg.fhw-icon { width: 17px; height: 17px; color: #aeaeae; flex-shrink: 0; }
+  #froens-help-panel a.fhw-link svg.fhw-chev { width: 14px; height: 14px; color: #aeaeae; flex-shrink: 0; }
+  #froens-help-panel a.fhw-link .fhw-link-label {
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: #000000;
+  }
+
+  #froens-help-panel a.fhw-featured {
+    background: #f7f5f4;
+    border-left: 3px solid #b5aa79;
+    border-bottom: none;
+    padding: 14px;
+    margin-bottom: 6px;
+  }
+  #froens-help-panel a.fhw-featured:hover { background: #efece9; }
+  #froens-help-panel a.fhw-featured svg.fhw-icon { width: 22px; height: 22px; color: #2f4937; }
+  #froens-help-panel a.fhw-featured .fhw-featured-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+  }
+  #froens-help-panel a.fhw-featured .fhw-featured-title {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #000000;
+  }
+  #froens-help-panel a.fhw-featured .fhw-featured-sub {
+    font-size: 11px;
+    color: #aeaeae;
+  }
+  #froens-help-panel a.fhw-featured svg.fhw-chev { color: #2f4937; }
+
+  #froens-help-panel a.fhw-whatsapp {
+    background: #2f4937;
+    color: #ffffff;
+    padding: 14px;
+    margin-top: 10px;
+    border-bottom: none;
+    border-radius: 2px;
+  }
+  #froens-help-panel a.fhw-whatsapp:hover { background: #253b2c; }
+  #froens-help-panel a.fhw-whatsapp svg.fhw-icon { width: 22px; height: 22px; color: #b5aa79; }
+  #froens-help-panel a.fhw-whatsapp svg.fhw-chev { color: #ffffff; }
+  #froens-help-panel a.fhw-whatsapp .fhw-whatsapp-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+  }
+  #froens-help-panel a.fhw-whatsapp .fhw-whatsapp-title {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #ffffff;
+  }
+  #froens-help-panel a.fhw-whatsapp .fhw-whatsapp-sub {
+    font-size: 11px;
+    color: #b5aa79;
+  }
+
+  /* Stock por tienda — acordeón */
+  #froens-help-panel .fhw-accordion {
+    border-bottom: 0.5px solid #f7f5f4;
+  }
+  #froens-help-panel .fhw-accordion-trigger {
+    width: 100%;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 14px;
+    border-radius: 2px;
+    transition: background 0.15s ease;
+    text-align: left;
+    font-family: 'Archivo', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: inherit;
+  }
+  #froens-help-panel .fhw-accordion-trigger:hover { background: #f7f5f4; }
+  #froens-help-panel .fhw-accordion-trigger .fhw-link-inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  #froens-help-panel .fhw-accordion-trigger svg.fhw-icon { width: 17px; height: 17px; color: #aeaeae; flex-shrink: 0; }
+  #froens-help-panel .fhw-accordion-trigger svg.fhw-chev {
+    width: 14px; height: 14px; color: #aeaeae; flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+  #froens-help-panel .fhw-accordion-trigger[aria-expanded="true"] svg.fhw-chev {
+    transform: rotate(90deg);
+  }
+  #froens-help-panel .fhw-accordion-body {
+    display: none;
+    padding: 8px 14px 12px 43px;
+    font-size: 12px;
+    font-family: 'Archivo', -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: 0.04em;
+    color: #555555;
+    line-height: 1.5;
+  }
+  #froens-help-panel .fhw-accordion-body.is-open { display: block; }
+
+  @media (max-width: 480px) {
+    #froens-help-panel {
+      right: 10px;
+      left: 10px;
+      width: auto;
+      bottom: 84px;
+    }
+    #froens-help-toggle {
+      right: 14px;
+      bottom: 14px;
+    }
+  }
+</style>
+
+<button id="froens-help-toggle" aria-label="Abrir ayuda" type="button">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M3 20l1.3 -3.9a9 8 0 1 1 3.4 2.9z"/>
+    <line x1="12" y1="12" x2="12" y2="12.01"/>
+    <line x1="8" y1="12" x2="8" y2="12.01"/>
+    <line x1="16" y1="12" x2="16" y2="12.01"/>
+  </svg>
+</button>
+
+<div id="froens-help-panel" role="dialog" aria-labelledby="froens-help-title" aria-hidden="true">
+
+  <div class="fhw-header">
+    <div class="fhw-header-top">
+      <p id="froens-help-title" class="fhw-title">Hola, ¿en qué te ayudamos?</p>
+      <button class="fhw-close" id="froens-help-close" aria-label="Cerrar" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="fhw-body">
+
+    <!-- Seguimiento de pedidos (destacado) -->
+    <a class="fhw-link fhw-featured" href="/pages/seguimiento-de-pedidos">
+      <span class="fhw-link-inner">
+        <svg class="fhw-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12.89 1.45l8 4A2 2 0 0 1 22 7.24v9.53a2 2 0 0 1-1.11 1.79l-8 4a2 2 0 0 1-1.79 0l-8-4a2 2 0 0 1-1.1-1.8V7.24a2 2 0 0 1 1.11-1.79l8-4a2 2 0 0 1 1.78 0z"/>
+          <polyline points="2.32 6.16 12 11 21.68 6.16"/>
+          <line x1="12" y1="22.76" x2="12" y2="11"/>
+        </svg>
+        <span class="fhw-featured-text">
+          <span class="fhw-featured-title">Seguimiento de pedidos</span>
+          <span class="fhw-featured-sub">Rastrea tu compra acá</span>
+        </span>
+      </span>
+      <svg class="fhw-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="5" y1="12" x2="19" y2="12"/>
+        <polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </a>
+
+    <!-- Cambios y devoluciones -->
+    <a class="fhw-link" href="/pages/cambios-y-devoluciones-froens">
+      <span class="fhw-link-inner">
+        <svg class="fhw-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="23 4 23 10 17 10"/>
+          <polyline points="1 20 1 14 7 14"/>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+        </svg>
+        <span class="fhw-link-label">Cambios y devoluciones</span>
+      </span>
+      <svg class="fhw-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
+    </a>
+
+    <!-- Despachos y envíos -->
+    <a class="fhw-link" href="/pages/politicas-de-despacho">
+      <span class="fhw-link-inner">
+        <svg class="fhw-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="1" y="3" width="15" height="13"/>
+          <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+          <circle cx="5.5" cy="18.5" r="2.5"/>
+          <circle cx="18.5" cy="18.5" r="2.5"/>
+        </svg>
+        <span class="fhw-link-label">Despachos y envíos</span>
+      </span>
+      <svg class="fhw-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
+    </a>
+
+    <!-- Preguntas frecuentes -->
+    <a class="fhw-link" href="/pages/ayuda-clientes-y-preguntas-frecuentes">
+      <span class="fhw-link-inner">
+        <svg class="fhw-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <span class="fhw-link-label">Preguntas frecuentes</span>
+      </span>
+      <svg class="fhw-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
+    </a>
+
+    <!-- Nuestras Tiendas -->
+    <a class="fhw-link" href="https://froens.cl/pages/casas-froens" target="_blank" rel="noopener">
+      <span class="fhw-link-inner">
+        <svg class="fhw-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span class="fhw-link-label">Nuestras tiendas</span>
+      </span>
+      <svg class="fhw-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
+    </a>
+
+    <!-- Stock por tienda (acordeón) -->
+    <div class="fhw-accordion">
+      <button class="fhw-accordion-trigger" aria-expanded="false" aria-controls="fhw-stock-body" type="button">
+        <span class="fhw-link-inner">
+          <svg class="fhw-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+            <line x1="12" y1="22.08" x2="12" y2="12"/>
+          </svg>
+          <span class="fhw-link-label">Stock por tienda</span>
+        </span>
+        <svg class="fhw-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </button>
+      <div class="fhw-accordion-body" id="fhw-stock-body">
+        En nuestra página web puedes revisar el stock por tienda, debajo de agregar al carrito está la opción. Para que puedas revisar la disponibilidad.
+      </div>
+    </div>
+
+    <!-- WhatsApp -->
+    <a class="fhw-link fhw-whatsapp" href="https://wa.me/56927931452?text=Hola%20Fr%C3%B8ens%2C%20vengo%20del%20chat%20del%20sitio%20y%20necesito%20ayuda%20con%3A%20" target="_blank" rel="noopener">
+      <span class="fhw-link-inner">
+        <svg class="fhw-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 21l1.65 -3.8a9 9 0 1 1 3.4 2.9l-5.05 .9"/>
+          <path d="M9 10a.5 .5 0 0 0 1 0v-1a.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a.5 .5 0 0 0 0 -1h-1a.5 .5 0 0 0 0 1"/>
+        </svg>
+        <span class="fhw-whatsapp-text">
+          <span class="fhw-whatsapp-title">Hablar por WhatsApp</span>
+          <span class="fhw-whatsapp-sub">Lun a Vie · 9:00 a 18:00</span>
+        </span>
+      </span>
+      <svg class="fhw-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="5" y1="12" x2="19" y2="12"/>
+        <polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </a>
+
+  </div>
+
+</div>
+
+<script>
+(function () {
+  var toggle = document.getElementById('froens-help-toggle');
+  var panel = document.getElementById('froens-help-panel');
+  var closeBtn = document.getElementById('froens-help-close');
+  if (!toggle || !panel || !closeBtn) return;
+
+  function setOpen(open) {
+    if (open) {
+      panel.classList.add('is-open');
+      panel.setAttribute('aria-hidden', 'false');
+      toggle.setAttribute('aria-label', 'Cerrar ayuda');
+    } else {
+      panel.classList.remove('is-open');
+      panel.setAttribute('aria-hidden', 'true');
+      toggle.setAttribute('aria-label', 'Abrir ayuda');
+    }
+  }
+
+  toggle.addEventListener('click', function () {
+    setOpen(!panel.classList.contains('is-open'));
+  });
+  closeBtn.addEventListener('click', function () { setOpen(false); });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') setOpen(false);
+  });
+
+  // Acordeón Stock por tienda
+  var accTrigger = document.querySelector('.fhw-accordion-trigger');
+  var accBody = document.getElementById('fhw-stock-body');
+  if (accTrigger && accBody) {
+    accTrigger.addEventListener('click', function () {
+      var isOpen = accBody.classList.contains('is-open');
+      accBody.classList.toggle('is-open', !isOpen);
+      accTrigger.setAttribute('aria-expanded', String(!isOpen));
+    });
+  }
+})();
+</script>

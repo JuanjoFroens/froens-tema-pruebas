@@ -1,0 +1,43 @@
+<!-- /snippets/product-variant-colors.liquid -->
+
+<!-- Selector de colores -->
+<style>
+  .colores-wrap .colores {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .colores-wrap .colores li {
+    width: 50px;
+    height: 50px;
+    margin: 0 15px 5px 0;
+    overflow: hidden;
+    border-radius: 50%;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  }
+  .colores-wrap .colores li div {display:none !important;}
+</style>
+
+      {% for tag in product.tags %}
+        {% if tag contains 'fam_' %}
+          <!-- <h2 class="heading-size-4">¿Quieres este producto en otro color?-</h2> -->
+          <div class="colores-wrap" >
+            <!-- {{tag}} -->
+            <!-- si viene '.' debería reemplazarse por '-' -->
+            <!-- {{ tag | replace: ".", "-" }} -->
+            {% assign tag2 = tag | replace: ".", "-" %}
+            <ul class="colores">
+              {% for altpro in collections[tag2].products %}                     
+                <li class="pro{{altpro.id}}" data-id="{{ altpro.id }}" data-name="Verde" style="background-image: url({{ altpro | img_url: '400x400', crop: 'center' }})">
+                  <a href="{{ altpro.url | within: collection }}">
+                    <img src="{{ altpro | img_url: '400x400', crop: 'center' }}" alt="{{ altpro.title }}" />
+                  </a>
+                  <!-- <span>{{ altpro.title }}</span> -->
+                </li> 
+              {% endfor %} 
+            </ul>
+          </div>
+          {% break %}
+        {% endif %}
+  
+      {% endfor %}

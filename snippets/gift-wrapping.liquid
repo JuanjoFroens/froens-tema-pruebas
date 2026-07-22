@@ -1,0 +1,143 @@
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<div class="col col01">
+  <h3>
+    {% if linklists.gift-wrapping.links.size > 0 %}
+      <input type="hidden" name="attributes[gift-wrapping]" value="" />
+      <input class="styled-checkbox" id="gift-wrapping" type="checkbox" name="attributes[gift-wrapping]" value="yes" {% if cart.attributes.gift-wrapping %} checked="checked"{% endif %} style="float: none; opacity:1;accent-color:#3f3f3f;" />
+    {% endif %}
+    <span style="padding:0 0 0 20px;">
+      {{ section.settings.regalos_title }}
+    </span>
+  </h3>
+  
+  {% comment %} 
+  <h3>{{ section.settings.regalos_title }}</h3>
+  {% if linklists.gift-wrapping.links.size > 0 %}
+  <div class="is-a-gift" id="is-a-gift" style="clear: left; margin: 0px 0 0px" class="clearfix rte">
+    <p>
+      <input type="hidden" name="attributes[gift-wrapping]" value="" />
+      <input class="styled-checkbox" id="gift-wrapping" type="checkbox" name="attributes[gift-wrapping]" value="yes" {% if cart.attributes.gift-wrapping %} checked="checked"{% endif %} style="float: none" />
+      <label for="gift-wrapping" style="display:inline; padding-left: 5px; float: none;">{{ linklists.gift-wrapping.links.first.object.title }} ({{ linklists.gift-wrapping.links.first.object.price | money }})</label>
+    </p>
+  </div>
+  {% endif %}
+  {% if linklists.gift-wrapping-2.links.size > 0 %}
+  <div class="is-a-gift" id="is-a-gift-2" style="clear: left; margin: 0px 0 0px" class="clearfix rte regalo">
+    <p>
+      <input type="hidden" name="attributes[gift-wrapping-2]" value="" />
+      <input class="styled-checkbox" id="gift-wrapping-2" type="checkbox" name="attributes[gift-wrapping-2]" value="yes" {% if cart.attributes.gift-wrapping-2 %} checked="checked"{% endif %} style="float: none" />
+      <label for="gift-wrapping-2" style="display:inline; padding-left: 5px; float: none;">{{ linklists.gift-wrapping-2.links.first.object.title }} ({{ linklists.gift-wrapping-2.links.first.object.price | money }})</label>
+    </p>
+  </div>
+  {% endif %}
+  {% if linklists.gift-wrapping-3.links.size > 0 %}
+  <div class="is-a-gift" id="is-a-gift-3" style="clear: left; margin: 0px 0 0px" class="clearfix rte regalo">
+    <p>
+      <input type="hidden" name="attributes[gift-wrapping-3]" value="" />
+      <input class="styled-checkbox" id="gift-wrapping-3" type="checkbox" name="attributes[gift-wrapping-3]" value="yes" {% if cart.attributes.gift-wrapping-3 %} checked="checked"{% endif %} style="float: none" />
+      <label for="gift-wrapping-3" style="display:inline; padding-left: 5px; float: none;">{{ linklists.gift-wrapping-3.links.first.object.title }} ({{ linklists.gift-wrapping-3.links.first.object.price | money }})</label>
+    </p>
+  </div>
+  {% endif %}
+  {% endcomment %} 
+</div>
+{% comment %} 
+<div class="col col02">
+  <div class="mensaje">
+    <h3>{{ section.settings.mensaje_title }}</h3>
+    <p>
+      <label style="display:none" for="gift-from">{{ section.settings.mensaje_de }}</label>
+      <input id="gift-from" type="text" placeholder="DE:" name="attributes[gift-from]" value="{{ cart.attributes["gift-from"] }}">
+    </p>
+    <p>
+      <label style="display:none" for="gift-to">{{ section.settings.mensaje_para }}</label>
+      <input id="gift-to" type="text" placeholder="PARA:" name="attributes[gift-to]" value="{{ cart.attributes["gift-to"] }}">
+    </p>
+    <p>
+      <label style="display:none" for="gift-note">{{ section.settings.mensaje_mensaje }}</label>
+      <textarea maxlength="200" placeholder="Escribe un mensaje de máximo 200 carácteres..." name="attributes[gift-note]" id="gift-note">{{ cart.attributes.gift-note }}</textarea>
+    </p>
+    <small>{{ section.settings.mensaje_disclaimer }}</small>
+  </div>
+</div> 
+{% endcomment %}
+{% liquid
+assign id = linklists.gift-wrapping.links.first.object.variants.first.id
+assign gift_wraps_in_cart = 0
+for item in cart.items
+  if item.id == id
+    assign gift_wraps_in_cart = item.quantity
+  endif
+endfor 
+%}
+<style>
+  #updates_{{ id }} { display: none; }
+</style>
+<script>
+  Shopify.Cart = Shopify.Cart || {};
+  Shopify.Cart.GiftWrap = {};
+  Shopify.Cart.GiftWrap.set = function() {
+    jQuery.ajax({
+      type: 'POST',
+      url: '/cart/update.js',
+      data: { updates: { {{ id }}: 1 }, attributes: { 'gift-wrapping': true } },
+      dataType: 'json',
+      success: function() { location.href = '/cart'; }
+    });
+  }
+
+  Shopify.Cart.GiftWrap.remove = function() {
+    jQuery.ajax({
+      type: 'POST',
+      url: '/cart/update.js',
+      data: { updates: { {{ id }}: 0 }, attributes: { 'gift-wrapping': '' } },
+      dataType: 'json',
+      success: function() { location.href = '/cart'; }
+    });
+  }
+
+  {% if cart.items.size == 1 and gift_wraps_in_cart > 0 %}
+    // If we have nothing but gift-wrap items in the cart.
+    jQuery(function() {
+      Shopify.Cart.GiftWrap.remove();
+    });
+  {% elsif gift_wraps_in_cart > 1 %}
+    // If we have more than one gift-wrap item in the cart.
+    jQuery(function() {
+      Shopify.Cart.GiftWrap.set();
+    });
+  {% elsif gift_wraps_in_cart > 0 and cart.attributes.gift-wrapping == blank  %}
+    // If we have a gift-wrap item in the cart but our gift-wrapping cart attribute has not been set.
+    jQuery(function() {
+      Shopify.Cart.GiftWrap.set();
+    });
+  {% elsif gift_wraps_in_cart == 0 and cart.attributes.gift-wrapping != blank  %}
+    // If we have no gift-wrap item in the cart but our gift-wrapping cart attribute has been set.
+    jQuery(function() {
+      Shopify.Cart.GiftWrap.set();
+    });
+  {% endif %}
+
+  // When the gift-wrapping checkbox is checked or unchecked.
+  jQuery(function() {
+    jQuery('[name="attributes\[gift-wrapping\]"]').change(function() {
+      if (jQuery(this).is(':checked')) {
+        Shopify.Cart.GiftWrap.set();
+        console.log('fun 1');
+      }
+      else {
+        Shopify.Cart.GiftWrap.remove();
+        console.log('fun 2');
+      }
+    });
+    if ($('input#gift-wrapping').is(':checked')) {
+      jQuery('div.mensaje').addClass('show');
+    }
+    if ($('input#gift-wrapping-2').is(':checked')) {
+      jQuery('div.mensaje').addClass('show');
+    }
+    if ($('input#gift-wrapping-3').is(':checked')) {
+      jQuery('div.mensaje').addClass('show');
+    }
+  });
+</script>

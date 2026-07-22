@@ -1,0 +1,423 @@
+{% comment %}
+  SECCIÓN: Cyber Despacho
+  Archivo: sections/cyber-despacho.liquid
+  Descripción: Sección de despacho express y retiro en tienda con ciudades
+{% endcomment %}
+
+<style>
+  .cyber-despacho {
+    padding: 60px 20px;
+    background-color: {{ section.settings.bg_color }};
+  }
+
+  .cyber-despacho__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .cyber-despacho__header {
+    margin-bottom: 32px;
+  }
+
+  .cyber-despacho__label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 8px;
+  }
+
+  .cyber-despacho__title {
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 700;
+    color: {{ section.settings.text_color }};
+    margin: 0 0 8px;
+  }
+
+  .cyber-despacho__desc {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+    max-width: 540px;
+  }
+
+  .cyber-despacho__benefits {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 48px;
+    padding: 24px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+  }
+
+  .cyber-despacho__benefit {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .cyber-despacho__benefit-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .cyber-despacho__benefit-title {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: {{ section.settings.text_color }};
+    margin-bottom: 2px;
+  }
+
+  .cyber-despacho__benefit-desc {
+    display: block;
+    font-size: 11px;
+    color: #888;
+    line-height: 1.4;
+  }
+
+  .cyber-ciudades__label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 8px;
+  }
+
+  .cyber-ciudades__title {
+    font-size: clamp(20px, 2.5vw, 28px);
+    font-weight: 700;
+    color: {{ section.settings.text_color }};
+    margin: 0 0 8px;
+  }
+
+  .cyber-ciudades__desc {
+    font-size: 14px;
+    color: #666;
+    margin: 0 0 28px;
+    max-width: 500px;
+  }
+
+  .cyber-ciudades__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .cyber-ciudad {
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    background: #fafafa;
+  }
+
+  .cyber-ciudad__name {
+    font-size: 15px;
+    font-weight: 700;
+    color: {{ section.settings.text_color }};
+    margin-bottom: 6px;
+  }
+
+  .cyber-ciudad__info {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+
+  .cyber-ciudad__badge {
+    display: inline-block;
+    background-color: {{ section.settings.text_color }};
+    color: #fff;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+  }
+
+  .cyber-ciudad__badge--outline {
+    background-color: transparent;
+    color: {{ section.settings.text_color }};
+    border: 1px solid {{ section.settings.text_color }};
+  }
+
+  .cyber-ciudades__cta-box {
+    border: 1px solid {{ section.settings.text_color }};
+    padding: 20px;
+    background: {{ section.settings.text_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+  }
+
+  .cyber-ciudades__cta-link {
+    font-size: 13px;
+    font-weight: 700;
+    color: {{ section.settings.bg_color }};
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: center;
+  }
+
+  .cyber-ciudades__cta-link:hover {
+    opacity: 0.8;
+  }
+
+  @media (max-width: 900px) {
+    .cyber-despacho__benefits {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .cyber-ciudades__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 560px) {
+    .cyber-despacho__benefits {
+      grid-template-columns: 1fr;
+    }
+    .cyber-ciudades__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<section class="cyber-despacho" id="cyber-despacho-{{ section.id }}">
+  <div class="cyber-despacho__inner">
+
+    <div class="cyber-despacho__header">
+      {% if section.settings.label != blank %}
+        <span class="cyber-despacho__label">{{ section.settings.label }}</span>
+      {% endif %}
+      {% if section.settings.title != blank %}
+        <h2 class="cyber-despacho__title">{{ section.settings.title }}</h2>
+      {% endif %}
+      {% if section.settings.description != blank %}
+        <p class="cyber-despacho__desc">{{ section.settings.description }}</p>
+      {% endif %}
+    </div>
+
+    <div class="cyber-despacho__benefits">
+      {% for block in section.blocks %}
+        {% if block.type == 'beneficio' %}
+          <div class="cyber-despacho__benefit" {{ block.shopify_attributes }}>
+            <div class="cyber-despacho__benefit-icon">{{ block.settings.icon }}</div>
+            <div>
+              <span class="cyber-despacho__benefit-title">{{ block.settings.title }}</span>
+              <span class="cyber-despacho__benefit-desc">{{ block.settings.description }}</span>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% if section.settings.cities_label != blank %}
+      <span class="cyber-ciudades__label">{{ section.settings.cities_label }}</span>
+    {% endif %}
+    {% if section.settings.cities_title != blank %}
+      <h2 class="cyber-ciudades__title">{{ section.settings.cities_title }}</h2>
+    {% endif %}
+    {% if section.settings.cities_desc != blank %}
+      <p class="cyber-ciudades__desc">{{ section.settings.cities_desc }}</p>
+    {% endif %}
+
+    <div class="cyber-ciudades__grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'ciudad' %}
+          <div class="cyber-ciudad" {{ block.shopify_attributes }}>
+            <div class="cyber-ciudad__name">{{ block.settings.name }}</div>
+            <div class="cyber-ciudad__info">{{ block.settings.info }}</div>
+            <span class="cyber-ciudad__badge{% if block.settings.badge_outline %} cyber-ciudad__badge--outline{% endif %}">
+              {{ block.settings.badge }}
+            </span>
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      {% if section.settings.stores_cta != blank %}
+        <div class="cyber-ciudades__cta-box">
+          <a href="{{ section.settings.stores_link }}" class="cyber-ciudades__cta-link">
+            {{ section.settings.stores_cta }} →
+          </a>
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cyber Despacho",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Etiqueta despacho",
+      "default": "ENVÍOS"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título despacho",
+      "default": "Despacho Express en 3 Horas y Envío Gratis"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Descripción",
+      "default": "¿Compraste y lo necesitas ya? Despacho express en 3 horas durante el Cyber Day en las principales ciudades del país. En el resto del país, el envío es gratis en compras sobre $59.990."
+    },
+    {
+      "type": "text",
+      "id": "cities_label",
+      "label": "Etiqueta ciudades",
+      "default": "TIENDAS FÍSICAS Y DESPACHO LOCAL"
+    },
+    {
+      "type": "text",
+      "id": "cities_title",
+      "label": "Título ciudades",
+      "default": "Retira en Tienda o Recibe el Mismo Día"
+    },
+    {
+      "type": "textarea",
+      "id": "cities_desc",
+      "label": "Descripción ciudades",
+      "default": "Compra online durante el Cyber Day y elige entre despacho express en tu ciudad o retiro en tienda sin esperas. Encuentra tu punto más cercano."
+    },
+    {
+      "type": "text",
+      "id": "stores_cta",
+      "label": "Texto botón Ver tiendas",
+      "default": "Ver todas las tiendas"
+    },
+    {
+      "type": "url",
+      "id": "stores_link",
+      "label": "Link Ver tiendas"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Color de fondo",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color del texto",
+      "default": "#000000"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "beneficio",
+      "name": "Beneficio de despacho",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Ícono (emoji)",
+          "default": "⚡"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Título",
+          "default": "Express 3 horas"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Descripción",
+          "default": "Santiago · Viña del Mar · Concepción · Osorno · Puerto Varas"
+        }
+      ]
+    },
+    {
+      "type": "ciudad",
+      "name": "Ciudad",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Ciudad",
+          "default": "Santiago"
+        },
+        {
+          "type": "textarea",
+          "id": "info",
+          "label": "Info",
+          "default": "Despacho express en 3 horas. Trae tu pedido a tu puerta sin esperas."
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge",
+          "default": "EXPRESS 3H"
+        },
+        {
+          "type": "checkbox",
+          "id": "badge_outline",
+          "label": "Badge estilo outline",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Cyber Despacho",
+      "blocks": [
+        {
+          "type": "beneficio",
+          "settings": { "icon": "⚡", "title": "Express 3 horas", "description": "Santiago · Viña del Mar · Concepción · Osorno · Puerto Varas" }
+        },
+        {
+          "type": "beneficio",
+          "settings": { "icon": "🚚", "title": "Envío gratis a todo el país", "description": "En compras sobre $59.990 (excepto multi-envío)" }
+        },
+        {
+          "type": "beneficio",
+          "settings": { "icon": "🏪", "title": "Retiro en tienda", "description": "Compra online, retira en tiendas Froens" }
+        },
+        {
+          "type": "beneficio",
+          "settings": { "icon": "🔄", "title": "Cambios garantizados", "description": "30 días para cambiar si la talla no es la correcta" }
+        },
+        {
+          "type": "ciudad",
+          "settings": { "name": "Santiago", "info": "Despacho express en 3 horas. Trae tu pedido a tu puerta sin esperas.", "badge": "EXPRESS 3H" }
+        },
+        {
+          "type": "ciudad",
+          "settings": { "name": "Viña del Mar", "info": "Cyber Day Viña: despacho express disponible durante el evento.", "badge": "EXPRESS 3H" }
+        },
+        {
+          "type": "ciudad",
+          "settings": { "name": "Concepción", "info": "Express disponible durante Cyber Day.", "badge": "EXPRESS 3H" }
+        },
+        {
+          "type": "ciudad",
+          "settings": { "name": "Osorno", "info": "Ropa outdoor Froens Osorno. Express disponible durante Cyber Day.", "badge": "EXPRESS 3H" }
+        },
+        {
+          "type": "ciudad",
+          "settings": { "name": "Puerto Varas", "info": "Ropa outdoor Froens Puerto Varas. Express disponible.", "badge": "EXPRESS 3H" }
+        },
+        {
+          "type": "ciudad",
+          "settings": { "name": "Temuco", "info": "Casa Matriz Froens, Local 8. Retiro en tienda disponible.", "badge": "PUNTO DE VENTA", "badge_outline": true }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

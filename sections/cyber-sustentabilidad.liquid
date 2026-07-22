@@ -1,0 +1,332 @@
+{% comment %}
+  SECCIÓN: Cyber Sustentabilidad
+  Archivo: sections/cyber-sustentabilidad.liquid
+  Descripción: Sección "Cyber Day con Propósito" - sustentabilidad
+{% endcomment %}
+
+<style>
+  .cyber-sustent {
+    padding: 60px 20px;
+    background-color: {{ section.settings.bg_color }};
+  }
+
+  .cyber-sustent__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .cyber-sustent__label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 8px;
+  }
+
+  .cyber-sustent__title {
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 700;
+    color: {{ section.settings.text_color }};
+    margin: 0 0 8px;
+  }
+
+  .cyber-sustent__desc {
+    font-size: 14px;
+    color: #666;
+    margin: 0 0 36px;
+    max-width: 540px;
+  }
+
+  .cyber-sustent__stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .cyber-sustent__stat-big {
+    background-color: #f5f5f5;
+    padding: 32px;
+  }
+
+  .cyber-sustent__stat-number {
+    font-size: clamp(36px, 5vw, 60px);
+    font-weight: 800;
+    color: {{ section.settings.accent_color }};
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .cyber-sustent__stat-label {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.4;
+  }
+
+  .cyber-sustent__stat-badge {
+    display: inline-block;
+    background-color: {{ section.settings.accent_color }};
+    color: #fff;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    margin-top: 12px;
+  }
+
+  .cyber-sustent__stat-dark {
+    background-color: {{ section.settings.text_color }};
+    padding: 32px;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .cyber-sustent__stat-dark-number {
+    font-size: clamp(36px, 5vw, 60px);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .cyber-sustent__stat-dark-label {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.4;
+  }
+
+  .cyber-sustent__bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .cyber-sustent__secondhand {
+    background-color: {{ section.settings.accent_color }};
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .cyber-sustent__secondhand-icon {
+    font-size: 28px;
+  }
+
+  .cyber-sustent__secondhand-text {
+    font-size: 13px;
+    color: #fff;
+  }
+
+  .cyber-sustent__secondhand-link {
+  font-size: 13px;
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: underline;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+
+  .cyber-sustent__secondhand-link:hover {
+    text-decoration: underline;
+  }
+
+  .cyber-sustent__responsibility {
+    background-color: #f5f5f5;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+
+  .cyber-sustent__responsibility-link {
+    font-size: 14px;
+    color: {{ section.settings.text_color }};
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .cyber-sustent__responsibility-link:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 640px) {
+    .cyber-sustent__stats {
+      grid-template-columns: 1fr;
+    }
+    .cyber-sustent__bottom {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<section class="cyber-sustent" id="cyber-sustent-{{ section.id }}">
+  <div class="cyber-sustent__inner">
+
+    {% if section.settings.label != blank %}
+      <span class="cyber-sustent__label">{{ section.settings.label }}</span>
+    {% endif %}
+    {% if section.settings.title != blank %}
+      <h2 class="cyber-sustent__title">{{ section.settings.title }}</h2>
+    {% endif %}
+    {% if section.settings.description != blank %}
+      <p class="cyber-sustent__desc">{{ section.settings.description }}</p>
+    {% endif %}
+
+    <div class="cyber-sustent__stats">
+      <div class="cyber-sustent__stat-big">
+        <div class="cyber-sustent__stat-number">{{ section.settings.stat1_number }}</div>
+        <div class="cyber-sustent__stat-label">{{ section.settings.stat1_label }}</div>
+        <span class="cyber-sustent__stat-badge">{{ section.settings.stat1_badge }}</span>
+      </div>
+      <div class="cyber-sustent__stat-dark">
+        <div class="cyber-sustent__stat-dark-number">{{ section.settings.stat2_number }}</div>
+        <div class="cyber-sustent__stat-dark-label">{{ section.settings.stat2_label }}</div>
+      </div>
+    </div>
+
+    <div class="cyber-sustent__bottom">
+      <div class="cyber-sustent__secondhand">
+        <span class="cyber-sustent__secondhand-icon">♻️</span>
+        <span class="cyber-sustent__secondhand-text">{{ section.settings.secondhand_text }}</span>
+        {% if section.settings.secondhand_link != blank %}
+          <a href="{{ section.settings.secondhand_link }}" class="cyber-sustent__secondhand-link">
+            {{ section.settings.secondhand_cta }} ♻️
+          </a>
+        {% endif %}
+      </div>
+      <div class="cyber-sustent__responsibility">
+        {% if section.settings.responsibility_link != blank %}
+          <a href="{{ section.settings.responsibility_link }}" class="cyber-sustent__responsibility-link">
+            {{ section.settings.responsibility_cta }} →
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cyber Sustentabilidad",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Etiqueta",
+      "default": "ROPA CONSCIENTE"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Cyber Day con Propósito: Comprás Menos, Comprás Mejor"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Descripción",
+      "default": "El Cyber Day no es solo precio. En Froens vendemos prendas que duran y que cuidan. Ropa sustentable al mejor precio del año."
+    },
+    {
+      "type": "text",
+      "id": "stat1_number",
+      "label": "Estadística 1 - Número",
+      "default": "68%"
+    },
+    {
+      "type": "text",
+      "id": "stat1_label",
+      "label": "Estadística 1 - Descripción",
+      "default": "de la colección usa materiales responsables"
+    },
+    {
+      "type": "text",
+      "id": "stat1_badge",
+      "label": "Estadística 1 - Badge",
+      "default": "ROPA CONSCIENTE"
+    },
+    {
+      "type": "text",
+      "id": "stat2_number",
+      "label": "Estadística 2 - Número",
+      "default": "4"
+    },
+    {
+      "type": "textarea",
+      "id": "stat2_label",
+      "label": "Estadística 2 - Descripción",
+      "default": "materiales sustentables: algodón orgánico, nylon reciclado, poliéster reciclado y fibras naturales"
+    },
+    {
+      "type": "text",
+      "id": "secondhand_text",
+      "label": "Texto Second Hand",
+      "default": "Froens Second Hand: dale una segunda vida a tu ropa usada"
+    },
+    {
+      "type": "text",
+      "id": "secondhand_cta",
+      "label": "CTA Second Hand",
+      "default": "Froens Second Hand"
+    },
+    {
+      "type": "url",
+      "id": "secondhand_link",
+      "label": "Link Second Hand"
+    },
+    {
+      "type": "text",
+      "id": "responsibility_cta",
+      "label": "CTA Responsabilidad",
+      "default": "Conoce nuestra responsabilidad"
+    },
+    {
+      "type": "url",
+      "id": "responsibility_link",
+      "label": "Link Responsabilidad"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Color de fondo",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color del texto",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Color acento (verde)",
+      "default": "#2a7a3b"
+    },
+    {
+      "type": "color",
+      "id": "accent_color_light",
+      "label": "Color acento claro",
+      "default": "#e8f5e9"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Cyber Sustentabilidad"
+    }
+  ]
+}
+{% endschema %}

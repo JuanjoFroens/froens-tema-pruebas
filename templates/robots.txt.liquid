@@ -1,0 +1,26 @@
+{% for group in robots.default_groups %}
+  {{- group.user_agent }}
+  {%- for rule in group.rules -%}
+    {{ rule }}
+  {%- endfor -%}
+  {%- if group.sitemap != blank -%}
+    {{ group.sitemap }}
+  {%- endif -%}
+{% endfor %}
+
+# --- INICIO DE REGLAS PERSONALIZADAS ---
+# Estas reglas bloquean parámetros de URL específicos (como UTMs y filtros) para mejorar el SEO
+User-agent: *
+Disallow: /*?utm_*
+Disallow: /*?pr_prod_strat=*
+Disallow: /*&ph_cursor=*
+Disallow: /*?filter.v.availability=*
+Disallow: /*?_pos=*
+Disallow: /*?_sid=*
+Disallow: /*?_ss=*
+Disallow: /*&phcursor*
+# --- FIN DE REGLAS PERSONALIZADAS ---
+
+{% comment %}
+  Caution! Please read https://help.shopify.com/en/manual/promoting-marketing/seo/editing-robots-txt before proceeding to make changes to this file.
+{% endcomment %}

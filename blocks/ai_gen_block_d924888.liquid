@@ -1,0 +1,470 @@
+{% doc %}
+  @prompt
+    Tabs de navegación en el header. que pueda poner textos a la izuquierda y derecha NO en el centro
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-header-tabs-{{ ai_gen_id }} {
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    display: block;
+  }
+
+  .ai-header-tabs__container-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    background-color: {{ block.settings.background_color }};
+    border-bottom: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+    padding: {{ block.settings.padding_vertical }}px {{ block.settings.padding_horizontal }}px;
+  }
+
+  .ai-header-tabs__group-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.tab_spacing }}px;
+    align-items: center;
+  }
+
+  .ai-header-tabs__group--left-{{ ai_gen_id }} {
+    justify-content: flex-start;
+  }
+
+  .ai-header-tabs__group--right-{{ ai_gen_id }} {
+    justify-content: flex-end;
+  }
+
+  .ai-header-tabs__tab-{{ ai_gen_id }} {
+    text-decoration: none;
+    color: {{ block.settings.text_color }};
+    font-size: {{ block.settings.font_size }}px;
+    padding: {{ block.settings.tab_padding_vertical }}px {{ block.settings.tab_padding_horizontal }}px;
+    border-radius: {{ block.settings.tab_border_radius }}px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    background-color: transparent;
+    border: {{ block.settings.tab_border_width }}px solid transparent;
+  }
+
+  .ai-header-tabs__tab-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.text_hover_color }};
+    background-color: {{ block.settings.tab_hover_bg }};
+    border-color: {{ block.settings.tab_hover_border }};
+  }
+
+  .ai-header-tabs__tab--active-{{ ai_gen_id }} {
+    color: {{ block.settings.active_text_color }};
+    background-color: {{ block.settings.active_bg_color }};
+    border-color: {{ block.settings.active_border_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-header-tabs__container-{{ ai_gen_id }} {
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .ai-header-tabs__group-{{ ai_gen_id }} {
+      width: 100%;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .ai-header-tabs__tab-{{ ai_gen_id }} {
+      font-size: {{ block.settings.font_size | times: 0.9 }}px;
+      padding: {{ block.settings.tab_padding_vertical | times: 0.8 }}px {{ block.settings.tab_padding_horizontal | times: 0.8 }}px;
+    }
+  }
+{% endstyle %}
+
+<nav-tabs-{{ ai_gen_id }} class="ai-header-tabs-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-header-tabs__container-{{ ai_gen_id }}">
+    <div class="ai-header-tabs__group-{{ ai_gen_id }} ai-header-tabs__group--left-{{ ai_gen_id }}">
+      {% if block.settings.left_tab_1_text != blank %}
+        <a
+          href="{{ block.settings.left_tab_1_link }}"
+          class="ai-header-tabs__tab-{{ ai_gen_id }}"
+          data-tab-id="left-1"
+        >
+          {{ block.settings.left_tab_1_text }}
+        </a>
+      {% endif %}
+
+      {% if block.settings.left_tab_2_text != blank %}
+        <a
+          href="{{ block.settings.left_tab_2_link }}"
+          class="ai-header-tabs__tab-{{ ai_gen_id }}"
+          data-tab-id="left-2"
+        >
+          {{ block.settings.left_tab_2_text }}
+        </a>
+      {% endif %}
+
+      {% if block.settings.left_tab_3_text != blank %}
+        <a
+          href="{{ block.settings.left_tab_3_link }}"
+          class="ai-header-tabs__tab-{{ ai_gen_id }}"
+          data-tab-id="left-3"
+        >
+          {{ block.settings.left_tab_3_text }}
+        </a>
+      {% endif %}
+
+      {% if block.settings.left_tab_4_text != blank %}
+        <a
+          href="{{ block.settings.left_tab_4_link }}"
+          class="ai-header-tabs__tab-{{ ai_gen_id }}"
+          data-tab-id="left-4"
+        >
+          {{ block.settings.left_tab_4_text }}
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="ai-header-tabs__group-{{ ai_gen_id }} ai-header-tabs__group--right-{{ ai_gen_id }}">
+      {% if block.settings.right_tab_1_text != blank %}
+        <a
+          href="{{ block.settings.right_tab_1_link }}"
+          class="ai-header-tabs__tab-{{ ai_gen_id }}"
+          data-tab-id="right-1"
+        >
+          {{ block.settings.right_tab_1_text }}
+        </a>
+      {% endif %}
+
+      {% if block.settings.right_tab_2_text != blank %}
+        <a
+          href="{{ block.settings.right_tab_2_link }}"
+          class="ai-header-tabs__tab-{{ ai_gen_id }}"
+          data-tab-id="right-2"
+        >
+          {{ block.settings.right_tab_2_text }}
+        </a>
+      {% endif %}
+
+      {% if block.settings.right_tab_3_text != blank %}
+        <a
+          href="{{ block.settings.right_tab_3_link }}"
+          class="ai-header-tabs__tab-{{ ai_gen_id }}"
+          data-tab-id="right-3"
+        >
+          {{ block.settings.right_tab_3_text }}
+        </a>
+      {% endif %}
+
+      {% if block.settings.right_tab_4_text != blank %}
+        <a
+          href="{{ block.settings.right_tab_4_link }}"
+          class="ai-header-tabs__tab-{{ ai_gen_id }}"
+          data-tab-id="right-4"
+        >
+          {{ block.settings.right_tab_4_text }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</nav-tabs-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class NavTabs{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.tabs = this.querySelectorAll('.ai-header-tabs__tab-{{ ai_gen_id }}');
+        this.highlightActiveTab();
+      }
+
+      highlightActiveTab() {
+        const currentPath = window.location.pathname;
+
+        this.tabs.forEach((tab) => {
+          const tabHref = tab.getAttribute('href');
+
+          if (tabHref && currentPath === tabHref) {
+            tab.classList.add('ai-header-tabs__tab--active-{{ ai_gen_id }}');
+          } else {
+            tab.classList.remove('ai-header-tabs__tab--active-{{ ai_gen_id }}');
+          }
+        });
+      }
+    }
+
+    customElements.define('nav-tabs-{{ ai_gen_id }}', NavTabs{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Header navigation tabs",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Left tabs"
+    },
+    {
+      "type": "text",
+      "id": "left_tab_1_text",
+      "label": "Tab 1 text",
+      "default": "Hombre"
+    },
+    {
+      "type": "url",
+      "id": "left_tab_1_link",
+      "label": "Tab 1 link"
+    },
+    {
+      "type": "text",
+      "id": "left_tab_2_text",
+      "label": "Tab 2 text",
+      "default": "Mujer"
+    },
+    {
+      "type": "url",
+      "id": "left_tab_2_link",
+      "label": "Tab 2 link"
+    },
+    {
+      "type": "text",
+      "id": "left_tab_3_text",
+      "label": "Tab 3 text"
+    },
+    {
+      "type": "url",
+      "id": "left_tab_3_link",
+      "label": "Tab 3 link"
+    },
+    {
+      "type": "text",
+      "id": "left_tab_4_text",
+      "label": "Tab 4 text"
+    },
+    {
+      "type": "url",
+      "id": "left_tab_4_link",
+      "label": "Tab 4 link"
+    },
+    {
+      "type": "header",
+      "content": "Right tabs"
+    },
+    {
+      "type": "text",
+      "id": "right_tab_1_text",
+      "label": "Tab 1 text",
+      "default": "Ofertas"
+    },
+    {
+      "type": "url",
+      "id": "right_tab_1_link",
+      "label": "Tab 1 link"
+    },
+    {
+      "type": "text",
+      "id": "right_tab_2_text",
+      "label": "Tab 2 text",
+      "default": "Nuevos"
+    },
+    {
+      "type": "url",
+      "id": "right_tab_2_link",
+      "label": "Tab 2 link"
+    },
+    {
+      "type": "text",
+      "id": "right_tab_3_text",
+      "label": "Tab 3 text"
+    },
+    {
+      "type": "url",
+      "id": "right_tab_3_link",
+      "label": "Tab 3 link"
+    },
+    {
+      "type": "text",
+      "id": "right_tab_4_text",
+      "label": "Tab 4 text"
+    },
+    {
+      "type": "url",
+      "id": "right_tab_4_link",
+      "label": "Tab 4 link"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "tab_spacing",
+      "label": "Tab spacing",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical",
+      "label": "Vertical padding",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "label": "Horizontal padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Tab style"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "tab_padding_vertical",
+      "label": "Tab vertical padding",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "tab_padding_horizontal",
+      "label": "Tab horizontal padding",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "tab_border_radius",
+      "label": "Tab border radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "tab_border_width",
+      "label": "Tab border width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_hover_color",
+      "label": "Text hover",
+      "default": "#aeaeae"
+    },
+    {
+      "type": "color",
+      "id": "tab_hover_bg",
+      "label": "Tab hover background",
+      "default": "#f7f5f4"
+    },
+    {
+      "type": "color",
+      "id": "tab_hover_border",
+      "label": "Tab hover border",
+      "default": "transparent"
+    },
+    {
+      "type": "color",
+      "id": "active_text_color",
+      "label": "Active text",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "active_bg_color",
+      "label": "Active background",
+      "default": "#f7f5f4"
+    },
+    {
+      "type": "color",
+      "id": "active_border_color",
+      "label": "Active border",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Bottom border",
+      "default": "#f7f5f4"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Bottom border width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header navigation tabs"
+    }
+  ]
+}
+{% endschema %}

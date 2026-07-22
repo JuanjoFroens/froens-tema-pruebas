@@ -1,0 +1,437 @@
+{% doc %}
+  @prompt
+    "Tabs de navegación en el header"
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-nav-tabs-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+  }
+
+  .ai-nav-tabs-container-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: {{ block.settings.alignment }};
+    gap: {{ block.settings.tab_spacing }}px;
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.vertical_padding }}px {{ block.settings.horizontal_padding }}px;
+    border-bottom: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .ai-nav-tabs-container-{{ ai_gen_id }}::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .ai-nav-tabs-container-{{ ai_gen_id }}::-webkit-scrollbar-thumb {
+    background-color: {{ block.settings.border_color }};
+    border-radius: 2px;
+  }
+
+  .ai-nav-tab-{{ ai_gen_id }} {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: {{ block.settings.tab_padding_vertical }}px {{ block.settings.tab_padding_horizontal }}px;
+    font-size: {{ block.settings.font_size }}px;
+    font-family: {{ block.settings.font_family.family }}, {{ block.settings.font_family.fallback_families }};
+    font-weight: {{ block.settings.font_family.weight }};
+    color: {{ block.settings.text_color }};
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    border-radius: {{ block.settings.tab_border_radius }}px;
+    background-color: transparent;
+  }
+
+  .ai-nav-tab-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.text_hover_color }};
+    background-color: {{ block.settings.tab_hover_bg }};
+  }
+
+  .ai-nav-tab-{{ ai_gen_id }}.active {
+    color: {{ block.settings.active_text_color }};
+    background-color: {{ block.settings.active_bg_color }};
+  }
+
+  {% if block.settings.show_underline %}
+    .ai-nav-tab-{{ ai_gen_id }}::after {
+      content: '';
+      position: absolute;
+      bottom: -{{ block.settings.vertical_padding }}px;
+      left: 0;
+      width: 100%;
+      height: {{ block.settings.underline_height }}px;
+      background-color: transparent;
+      transition: background-color 0.3s ease;
+    }
+
+    .ai-nav-tab-{{ ai_gen_id }}.active::after {
+      background-color: {{ block.settings.underline_color }};
+    }
+  {% endif %}
+
+  @media screen and (max-width: 749px) {
+    .ai-nav-tabs-container-{{ ai_gen_id }} {
+      justify-content: flex-start;
+      gap: {{ block.settings.tab_spacing | times: 0.7 }}px;
+      padding: {{ block.settings.vertical_padding | times: 0.8 }}px {{ block.settings.horizontal_padding | times: 0.8 }}px;
+    }
+
+    .ai-nav-tab-{{ ai_gen_id }} {
+      font-size: {{ block.settings.font_size | times: 0.9 }}px;
+      padding: {{ block.settings.tab_padding_vertical | times: 0.8 }}px {{ block.settings.tab_padding_horizontal | times: 0.8 }}px;
+    }
+  }
+{% endstyle %}
+
+<nav-tabs-{{ ai_gen_id }} class="ai-nav-tabs-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-nav-tabs-container-{{ ai_gen_id }}">
+    {% for i in (1..6) %}
+      {% liquid
+        assign tab_text_key = 'tab_' | append: i | append: '_text'
+        assign tab_link_key = 'tab_' | append: i | append: '_link'
+        assign tab_text = block.settings[tab_text_key]
+        assign tab_link = block.settings[tab_link_key]
+      %}
+
+      {% if tab_text != blank %}
+        <a
+          href="{{ tab_link | default: '#' }}"
+          class="ai-nav-tab-{{ ai_gen_id }}"
+          data-tab-index="{{ i }}"
+        >
+          {{ tab_text }}
+        </a>
+      {% endif %}
+    {% endfor %}
+  </div>
+</nav-tabs-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class NavTabs{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.tabs = this.querySelectorAll('.ai-nav-tab-{{ ai_gen_id }}');
+        this.setupActiveState();
+      }
+
+      setupActiveState() {
+        const currentPath = window.location.pathname;
+        let activeTabFound = false;
+
+        this.tabs.forEach((tab) => {
+          const tabHref = tab.getAttribute('href');
+          
+          if (tabHref && tabHref !== '#') {
+            const tabPath = new URL(tabHref, window.location.origin).pathname;
+            
+            if (currentPath === tabPath || currentPath.startsWith(tabPath + '/')) {
+              tab.classList.add('active');
+              activeTabFound = true;
+            }
+          }
+        });
+
+        if (!activeTabFound && this.tabs.length > 0) {
+          this.tabs[0].classList.add('active');
+        }
+      }
+    }
+
+    customElements.define('nav-tabs-{{ ai_gen_id }}', NavTabs{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Tabs de navegación",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Pestañas"
+    },
+    {
+      "type": "text",
+      "id": "tab_1_text",
+      "label": "Pestaña 1 - Texto",
+      "default": "Inicio"
+    },
+    {
+      "type": "url",
+      "id": "tab_1_link",
+      "label": "Pestaña 1 - Enlace"
+    },
+    {
+      "type": "text",
+      "id": "tab_2_text",
+      "label": "Pestaña 2 - Texto",
+      "default": "Productos"
+    },
+    {
+      "type": "url",
+      "id": "tab_2_link",
+      "label": "Pestaña 2 - Enlace"
+    },
+    {
+      "type": "text",
+      "id": "tab_3_text",
+      "label": "Pestaña 3 - Texto",
+      "default": "Colecciones"
+    },
+    {
+      "type": "url",
+      "id": "tab_3_link",
+      "label": "Pestaña 3 - Enlace"
+    },
+    {
+      "type": "text",
+      "id": "tab_4_text",
+      "label": "Pestaña 4 - Texto"
+    },
+    {
+      "type": "url",
+      "id": "tab_4_link",
+      "label": "Pestaña 4 - Enlace"
+    },
+    {
+      "type": "text",
+      "id": "tab_5_text",
+      "label": "Pestaña 5 - Texto"
+    },
+    {
+      "type": "url",
+      "id": "tab_5_link",
+      "label": "Pestaña 5 - Enlace"
+    },
+    {
+      "type": "text",
+      "id": "tab_6_text",
+      "label": "Pestaña 6 - Texto"
+    },
+    {
+      "type": "url",
+      "id": "tab_6_link",
+      "label": "Pestaña 6 - Enlace"
+    },
+    {
+      "type": "header",
+      "content": "Diseño"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alineación",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Izquierda"
+        },
+        {
+          "value": "center",
+          "label": "Centro"
+        },
+        {
+          "value": "flex-end",
+          "label": "Derecha"
+        },
+        {
+          "value": "space-between",
+          "label": "Espacio entre"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Ancho en escritorio",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "tab_spacing",
+      "label": "Espaciado entre pestañas",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "vertical_padding",
+      "label": "Padding vertical",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "horizontal_padding",
+      "label": "Padding horizontal",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Estilo de pestañas"
+    },
+    {
+      "type": "font_picker",
+      "id": "font_family",
+      "label": "Fuente",
+      "default": "archivo_n4"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Tamaño de fuente",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "tab_padding_vertical",
+      "label": "Padding vertical de pestaña",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "tab_padding_horizontal",
+      "label": "Padding horizontal de pestaña",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "tab_border_radius",
+      "label": "Radio de borde",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Colores"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Fondo del contenedor",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color de texto",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_hover_color",
+      "label": "Color de texto al pasar",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "tab_hover_bg",
+      "label": "Fondo al pasar",
+      "default": "#f7f5f4"
+    },
+    {
+      "type": "color",
+      "id": "active_text_color",
+      "label": "Color de texto activo",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "active_bg_color",
+      "label": "Fondo activo",
+      "default": "#f7f5f4"
+    },
+    {
+      "type": "header",
+      "content": "Borde"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Ancho de borde inferior",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Color de borde",
+      "default": "#f7f5f4"
+    },
+    {
+      "type": "header",
+      "content": "Subrayado activo"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_underline",
+      "label": "Mostrar subrayado en pestaña activa",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "underline_height",
+      "label": "Altura del subrayado",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "color",
+      "id": "underline_color",
+      "label": "Color del subrayado",
+      "default": "#000000"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tabs de navegación"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,416 @@
+{% doc %}
+  @prompt
+    Tabs de navegación en el header. que pueda poner textos a la izuquierda y derecha NO en el centro. 
+    Que pueda editar la tipografia y que cuando este en una pestaña se subtaye, quiero que los link esten subrayados solo cuando se seleccionen, agregar esto: Subrayado activo
+    Mostrar subrayado en pestaña activa
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-nav-tabs-{{ ai_gen_id }} {
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    display: block;
+  }
+
+  .ai-nav-tabs__container-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: {{ block.settings.gap }}px;
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.padding_vertical }}px {{ block.settings.padding_horizontal }}px;
+    border-bottom: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+  }
+
+  .ai-nav-tabs__left-{{ ai_gen_id }},
+  .ai-nav-tabs__right-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.gap }}px;
+    align-items: center;
+  }
+
+  .ai-nav-tabs__link-{{ ai_gen_id }} {
+    font-family: {{ block.settings.font_family.family }}, {{ block.settings.font_family.fallback_families }};
+    font-weight: {{ block.settings.font_family.weight }};
+    font-style: {{ block.settings.font_family.style }};
+    font-size: {{ block.settings.font_size }}px;
+    color: {{ block.settings.text_color }};
+    text-decoration: none;
+    padding: {{ block.settings.link_padding_vertical }}px {{ block.settings.link_padding_horizontal }}px;
+    transition: color 0.2s ease;
+    position: relative;
+    white-space: nowrap;
+  }
+
+  .ai-nav-tabs__link-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.text_hover_color }};
+  }
+
+  {% if block.settings.show_active_underline %}
+    .ai-nav-tabs__link-{{ ai_gen_id }}.active {
+      color: {{ block.settings.text_active_color }};
+      text-decoration: underline;
+    }
+  {% else %}
+    .ai-nav-tabs__link-{{ ai_gen_id }}.active {
+      color: {{ block.settings.text_active_color }};
+    }
+  {% endif %}
+
+  @media screen and (max-width: 749px) {
+    .ai-nav-tabs__container-{{ ai_gen_id }} {
+      flex-direction: column;
+      gap: {{ block.settings.gap | divided_by: 2 }}px;
+    }
+
+    .ai-nav-tabs__left-{{ ai_gen_id }},
+    .ai-nav-tabs__right-{{ ai_gen_id }} {
+      width: 100%;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .ai-nav-tabs__link-{{ ai_gen_id }} {
+      font-size: {{ block.settings.font_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<nav-tabs-{{ ai_gen_id }} class="ai-nav-tabs-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-nav-tabs__container-{{ ai_gen_id }}">
+    <div class="ai-nav-tabs__left-{{ ai_gen_id }}">
+      {% for i in (1..5) %}
+        {% liquid
+          assign link_key = 'left_link_' | append: i
+          assign text_key = 'left_text_' | append: i
+          assign link_url = block.settings[link_key]
+          assign link_text = block.settings[text_key]
+        %}
+        {% if link_text != blank %}
+          <a
+            href="{% if link_url != blank %}{{ link_url }}{% else %}#{% endif %}"
+            class="ai-nav-tabs__link-{{ ai_gen_id }}"
+            data-tab-link
+          >
+            {{ link_text }}
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="ai-nav-tabs__right-{{ ai_gen_id }}">
+      {% for i in (1..5) %}
+        {% liquid
+          assign link_key = 'right_link_' | append: i
+          assign text_key = 'right_text_' | append: i
+          assign link_url = block.settings[link_key]
+          assign link_text = block.settings[text_key]
+        %}
+        {% if link_text != blank %}
+          <a
+            href="{% if link_url != blank %}{{ link_url }}{% else %}#{% endif %}"
+            class="ai-nav-tabs__link-{{ ai_gen_id }}"
+            data-tab-link
+          >
+            {{ link_text }}
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</nav-tabs-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class NavTabs{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.links = this.querySelectorAll('[data-tab-link]');
+        this.currentPath = window.location.pathname;
+        this.setActiveTab();
+      }
+
+      setActiveTab() {
+        this.links.forEach((link) => {
+          const linkPath = new URL(link.href, window.location.origin).pathname;
+          
+          if (linkPath === this.currentPath) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }
+    }
+
+    customElements.define('nav-tabs-{{ ai_gen_id }}', NavTabs{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Navigation tabs",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Left tabs"
+    },
+    {
+      "type": "text",
+      "id": "left_text_1",
+      "label": "Tab 1 text",
+      "default": "Hombre"
+    },
+    {
+      "type": "url",
+      "id": "left_link_1",
+      "label": "Tab 1 link"
+    },
+    {
+      "type": "text",
+      "id": "left_text_2",
+      "label": "Tab 2 text",
+      "default": "Mujer"
+    },
+    {
+      "type": "url",
+      "id": "left_link_2",
+      "label": "Tab 2 link"
+    },
+    {
+      "type": "text",
+      "id": "left_text_3",
+      "label": "Tab 3 text"
+    },
+    {
+      "type": "url",
+      "id": "left_link_3",
+      "label": "Tab 3 link"
+    },
+    {
+      "type": "text",
+      "id": "left_text_4",
+      "label": "Tab 4 text"
+    },
+    {
+      "type": "url",
+      "id": "left_link_4",
+      "label": "Tab 4 link"
+    },
+    {
+      "type": "text",
+      "id": "left_text_5",
+      "label": "Tab 5 text"
+    },
+    {
+      "type": "url",
+      "id": "left_link_5",
+      "label": "Tab 5 link"
+    },
+    {
+      "type": "header",
+      "content": "Right tabs"
+    },
+    {
+      "type": "text",
+      "id": "right_text_1",
+      "label": "Tab 1 text",
+      "default": "Accesorios"
+    },
+    {
+      "type": "url",
+      "id": "right_link_1",
+      "label": "Tab 1 link"
+    },
+    {
+      "type": "text",
+      "id": "right_text_2",
+      "label": "Tab 2 text",
+      "default": "Sale"
+    },
+    {
+      "type": "url",
+      "id": "right_link_2",
+      "label": "Tab 2 link"
+    },
+    {
+      "type": "text",
+      "id": "right_text_3",
+      "label": "Tab 3 text"
+    },
+    {
+      "type": "url",
+      "id": "right_link_3",
+      "label": "Tab 3 link"
+    },
+    {
+      "type": "text",
+      "id": "right_text_4",
+      "label": "Tab 4 text"
+    },
+    {
+      "type": "url",
+      "id": "right_link_4",
+      "label": "Tab 4 link"
+    },
+    {
+      "type": "text",
+      "id": "right_text_5",
+      "label": "Tab 5 text"
+    },
+    {
+      "type": "url",
+      "id": "right_link_5",
+      "label": "Tab 5 link"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "font_family",
+      "label": "Font",
+      "default": "archivo_n4"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Active tab style"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_active_underline",
+      "label": "Show underline on active tab",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_hover_color",
+      "label": "Text hover",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "text_active_color",
+      "label": "Active tab text",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border",
+      "default": "#f7f5f4"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical",
+      "label": "Vertical padding",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "label": "Horizontal padding",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "link_padding_vertical",
+      "label": "Link vertical padding",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "link_padding_horizontal",
+      "label": "Link horizontal padding",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap between tabs",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    }
+  ],
+  "presets": [
+    {
+      "name": "Navigation tabs"
+    }
+  ]
+}
+{% endschema %}
