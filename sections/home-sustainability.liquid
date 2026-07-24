@@ -1,0 +1,161 @@
+{% comment %}
+  SECCIÓN: Home Sustainability
+  Archivo: sections/home-sustainability.liquid
+  Descripción: Bloque simple "ropa consciente" para la Home (texto + link), sin gráfico de
+  estadísticas — pensado como bloque permanente, no como banner de campaña puntual.
+{% endcomment %}
+
+<style>
+  .home-sustain {
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding: {{ section.settings.padding_top }}px 22px {{ section.settings.padding_bottom }}px;
+  }
+
+  .home-sustain__inner {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .home-sustain__label {
+    display: block;
+    font-size: 10.5px;
+    letter-spacing: .22em;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: {{ section.settings.label_color }};
+    margin-bottom: 10px;
+  }
+
+  .home-sustain__text {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.35;
+    margin: 0 0 14px;
+  }
+
+  .home-sustain__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 22px;
+  }
+
+  .home-sustain__link {
+    font-size: 11.5px;
+    letter-spacing: .08em;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    color: {{ section.settings.link_color }};
+  }
+</style>
+
+<div class="home-sustain" id="home-sustain-{{ section.id }}">
+  <div class="home-sustain__inner">
+    {% if section.settings.label != blank %}
+      <span class="home-sustain__label">{{ section.settings.label }}</span>
+    {% endif %}
+    {% if section.settings.text != blank %}
+      <p class="home-sustain__text">{{ section.settings.text }}</p>
+    {% endif %}
+    <div class="home-sustain__links">
+      {% if section.settings.link_1_label != blank %}
+        <a href="{{ section.settings.link_1_url }}" class="home-sustain__link">{{ section.settings.link_1_label }}</a>
+      {% endif %}
+      {% if section.settings.link_2_label != blank %}
+        <a href="{{ section.settings.link_2_url }}" class="home-sustain__link">{{ section.settings.link_2_label }}</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Home · Ropa consciente",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Etiqueta",
+      "default": "ROPA CONSCIENTE"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Texto",
+      "default": "Algodón orgánico, lana merino y poliéster de botellas recicladas. Hecho para durar — y si ya no la usas, entra a Froens Second Hand."
+    },
+    {
+      "type": "text",
+      "id": "link_1_label",
+      "label": "Link 1 - texto",
+      "default": "Conoce nuestra responsabilidad"
+    },
+    {
+      "type": "url",
+      "id": "link_1_url",
+      "label": "Link 1 - url"
+    },
+    {
+      "type": "text",
+      "id": "link_2_label",
+      "label": "Link 2 - texto",
+      "default": "Froens Second Hand"
+    },
+    {
+      "type": "url",
+      "id": "link_2_url",
+      "label": "Link 2 - url"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Color de fondo",
+      "default": "#1e1d1d"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color de texto principal",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Color de la etiqueta",
+      "default": "#b5aa79"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Color de los links",
+      "default": "#b5aa79"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Espacio superior",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Espacio inferior",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 30
+    }
+  ],
+  "presets": [
+    {
+      "name": "Home · Ropa consciente"
+    }
+  ]
+}
+{% endschema %}

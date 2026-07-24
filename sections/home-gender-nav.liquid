@@ -39,12 +39,18 @@
 
   .home-gender-nav__item--active {
     color: {{ section.settings.active_color }};
-    border-bottom-color: {{ section.settings.active_color }};
+    border-bottom-color: {{ section.settings.accent_color }};
   }
 
   .home-gender-nav__item--accent {
     color: {{ section.settings.accent_color }};
     margin-left: auto;
+  }
+
+  /* Solo mobile: en desktop el menú principal del header ya cumple esta función
+     (mostrar los mismos links acá arriba sería puro ruido redundante). */
+  @media only screen and (min-width: 768px) {
+    .home-gender-nav { display: none; }
   }
 </style>
 
@@ -73,25 +79,25 @@
       "type": "color",
       "id": "bg_color",
       "label": "Color de fondo",
-      "default": "#f6f4f0"
+      "default": "#ffffff"
     },
     {
       "type": "color",
       "id": "text_color",
       "label": "Color de texto (inactivo)",
-      "default": "#8a8578"
+      "default": "#aeaeae"
     },
     {
       "type": "color",
       "id": "active_color",
       "label": "Color de texto (activo)",
-      "default": "#1a1a1a"
+      "default": "#000000"
     },
     {
       "type": "color",
       "id": "accent_color",
       "label": "Color acento (ej. Sale)",
-      "default": "#9c2b23"
+      "default": "#2f4937"
     }
   ],
   "blocks": [
