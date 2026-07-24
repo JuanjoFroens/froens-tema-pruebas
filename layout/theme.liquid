@@ -369,13 +369,26 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       };
 
     
+      // Este tema carga Google Tag Manager (gtm.js), que NO define window.gtag por sí
+      // solo -- solo lo hace la librería gtag.js. Llamar a gtag(...) directo acá tiraba
+      // "ReferenceError: gtag is not defined" en cada pageview (detectado en auditoría
+      // jul-2026), rompiendo la medición de estas métricas. Empujamos a dataLayer (la
+      // API real de GTM) y, si además existe gtag.js cargado en el futuro, lo usamos también.
+      const sendVitalsEvent = () => {
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({ event: 'web_vitals_performance', ...payload });
+          if (typeof gtag === 'function') {
+              gtag('event', 'web_vitals_performance', payload);
+          }
+      };
+
       if (name === 'CLS' || name === 'INP') {
-          gtag('event', 'web_vitals_performance', payload);
+          sendVitalsEvent();
       } else {
           if ('requestIdleCallback' in window) {
-              requestIdleCallback(() => gtag('event', 'web_vitals_performance', payload));
+              requestIdleCallback(sendVitalsEvent);
           } else {
-              gtag('event', 'web_vitals_performance', payload);
+              sendVitalsEvent();
           }
       }
   };

@@ -131,16 +131,20 @@
             {%- assign subtotal = cart.total_price | plus: total_descuento -%}
             <p class="gaea subtotal">
               <span class="cart__footer__label">{{ 'cart.general.subtotal' | t }}:</span>
-              <span class="cart__footer__value">{{ subtotal | money_with_currency }}</span>
+              <span class="cart__footer__value">{%- if settings.currency_code_enable -%}{{ subtotal | money_with_currency }}{%- else -%}{{ subtotal | money }}{%- endif -%}</span>
             </p>
             <p class="gaea descuentos">
               <span class="cart__footer__label">Descuentos:</span>
-              <span class="cart__footer__value">{{- total_descuento | money_with_currency -}}</span>
+              <span class="cart__footer__value">{%- if settings.currency_code_enable -%}{{- total_descuento | money_with_currency -}}{%- else -%}{{- total_descuento | money -}}{%- endif -%}</span>
             </p>
             <p class="gaea totalbruto">
               <span class="cart__footer__label">Total:</span>
               <span class="cart__footer__value" data-cart-final>
-                {{- cart.total_price | money_with_currency -}}
+                {%- if settings.currency_code_enable -%}
+                  {{- cart.total_price | money_with_currency -}}
+                {%- else -%}
+                  {{- cart.total_price | money -}}
+                {%- endif -%}
               </span>
             </p>
           </div>

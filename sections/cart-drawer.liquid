@@ -259,7 +259,11 @@
                 {{ 'cart.general.checkout' | t }}
                 <span class="cta__dot">•</span>
                 <span data-cart-final>
-                  {{ cart.total_price | money_with_currency }}
+                  {%- if settings.currency_code_enable -%}
+                    {{ cart.total_price | money_with_currency }}
+                  {%- else -%}
+                    {{ cart.total_price | money }}
+                  {%- endif -%}
                 </span>
               </button>
             </form>
