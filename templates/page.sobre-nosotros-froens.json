@@ -1,1 +1,448 @@
-{"sections":{"main":{"type":"page","disabled":true,"settings":{"kicker":"SOBRE NOSOTROS","kicker_size":3,"show_title":true,"title_size":8,"show_content":true,"content_size":5,"align_text":"text-left","text_color":"text--neutral","bg":"palette--light bg--neutral","width":"wrapper","padding_top":36,"padding_bottom":36}},"24998283-74d4-4f30-bbcc-ce03997ac2e5":{"type":"section-hero","blocks":{"template--16757317304532__24998283-74d4-4f30-bbcc-ce03997ac2e5-kicker-1":{"type":"kicker","settings":{"kicker":"","enable_line":false,"text_size":4}},"template--16757317304532__24998283-74d4-4f30-bbcc-ce03997ac2e5-heading-1":{"type":"heading","settings":{"title":"","text_size":10}},"template--16757317304532__24998283-74d4-4f30-bbcc-ce03997ac2e5-text-1":{"type":"text","settings":{"richtext":"","text_size":6}},"template--16757317304532__24998283-74d4-4f30-bbcc-ce03997ac2e5-button-1":{"type":"button","disabled":true,"settings":{"link_text_1":"View products","link_1":"","button_size_1":"btn--long","button_style_1":"btn","button_color_1":"btn--white","link_text_2":"Learn more","link_2":"","button_size_2":"btn--long","button_style_2":"btn-text-thick-line","button_color_2":"btn--white","link_text_3":"","link_3":"","button_size_3":"btn--long","button_style_3":"btn-text-thick-line","button_color_3":"btn--white"}}},"block_order":["template--16757317304532__24998283-74d4-4f30-bbcc-ce03997ac2e5-kicker-1","template--16757317304532__24998283-74d4-4f30-bbcc-ce03997ac2e5-heading-1","template--16757317304532__24998283-74d4-4f30-bbcc-ce03997ac2e5-text-1","template--16757317304532__24998283-74d4-4f30-bbcc-ce03997ac2e5-button-1"],"settings":{"image":"shopify:\/\/shop_images\/banners-01.jpg","height":"use_screen_two_thirds","overlay_opacity":15,"overlay_color":"#000000","enable_overlay_text":false,"preload_image":false,"content_width":2000,"text_align":"align--middle-center","text_color":"text--white","color_bg":"hero__content--transparent","width":"wrapper--none","padding_top":0,"padding_bottom":0}},"7854c8a7-d60b-4f16-84c1-852f78d66c8a":{"type":"section-gallery-text","blocks":{"template--16757317304532__7854c8a7-d60b-4f16-84c1-852f78d66c8a-text-1":{"type":"text","settings":{"title":"Custom Text","title_size":3,"text":"<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.<\/p>","body_size":4,"text_align":"text-left"}}},"block_order":["template--16757317304532__7854c8a7-d60b-4f16-84c1-852f78d66c8a-text-1"],"disabled":true,"settings":{"bg":"palette--light bg--neutral","grid_large":1,"grid_medium":1,"grid_mobile":1,"width":"wrapper","padding_top":36,"padding_bottom":36}},"ee306a96-ae3c-4c9e-83a0-b668243a50b3":{"type":"section-richtext","blocks":{"template--16757317304532__ee306a96-ae3c-4c9e-83a0-b668243a50b3-kicker-1":{"type":"kicker","disabled":true,"settings":{"kicker":"Introducing","enable_line":true,"text_size":4}},"heading_C86Nqp":{"type":"heading","disabled":true,"settings":{"heading":"Creamos ropa consciente y duradera para acompañarte en tu día a día.","text_size":8}},"template--16757317304532__ee306a96-ae3c-4c9e-83a0-b668243a50b3-heading-1":{"type":"heading","settings":{"heading":"Este es nuestro propósito y lo que nos motiva a seguir avanzando. Compartir con los amigos y disfrutar de la naturaleza nos inspira a crear productos con el menor impacto posible y que perduren en el tiempo, con un estilo atemporal, enfocándonos en la calidad de las fibras, un buen diseño y el mejor calce.","text_size":4}},"template--16757317304532__ee306a96-ae3c-4c9e-83a0-b668243a50b3-text-1":{"type":"text","disabled":true,"settings":{"text":"<p>Compartir con los amigos y disfrutar de la naturaleza es lo que nos inspira a fabricar productos con el menor impacto posible y que perdurarán en el tiempo.<\/p>","text_size":4,"text_columns":1}},"template--16757317304532__ee306a96-ae3c-4c9e-83a0-b668243a50b3-button-1":{"type":"button","disabled":true,"settings":{"link_text_1":"Shop all","link_1":"shopify:\/\/collections\/all","button_size_1":"btn--medium","button_style_1":"btn-text-thick-line","button_color_1":"btn--neutral","link_text_2":"","link_2":"","button_size_2":"btn--medium","button_style_2":"btn-text-thick-line","button_color_2":"btn--neutral","link_text_3":"","link_3":"","button_size_3":"btn--long","button_style_3":"btn-text-thick-line","button_color_3":"btn--white"}}},"block_order":["template--16757317304532__ee306a96-ae3c-4c9e-83a0-b668243a50b3-kicker-1","heading_C86Nqp","template--16757317304532__ee306a96-ae3c-4c9e-83a0-b668243a50b3-heading-1","template--16757317304532__ee306a96-ae3c-4c9e-83a0-b668243a50b3-text-1","template--16757317304532__ee306a96-ae3c-4c9e-83a0-b668243a50b3-button-1"],"settings":{"align_text":"text-left","text_color":"text--white","bg":"palette--bright bg--bright--accent","content_width":2000,"width":"wrapper","padding_top":36,"padding_bottom":36}},"section_double_DHiDNe":{"type":"section-double","blocks":{"text_FCnJUw":{"type":"text","settings":{"kicker":"SOMOS FROENS","title":"","text":"<p>Fue en 2012 cuando 3 amigos tuvieron una idea: crear una marca de ropa que no fuera una más del montón, si no una que representara el estilo de vida que los identificaba y que se destacara por sobre las otras por su diseño, calidad y propósito. <\/p><p>Así fue como nació Froens, una marca inspirada en la naturaleza y la vida al aire libre, para compañarte en tu día a día.<\/p>","font_size":5,"text_columns":1,"align_text":"text-left","button_text":"","button_url":"","button_color":"btn--neutral","button_style":"btn-text-thick-line","text_color":"text--neutral","bg_color":""}},"image_3gi8Xa":{"type":"image","settings":{"image":"shopify:\/\/shop_images\/bajada_parte_principal.jpg","overlay_opacity":0,"overlay_color":"#ffffff","enable_overlay_text":false,"kicker":"","title":"","richtext":"","text_align":"align--middle-center","text_color":"text--white","link_text":"","link":"","button_color":"btn--white","button_style":"btn"}}},"block_order":["text_FCnJUw","image_3gi8Xa"],"settings":{"height":"use_screen_one_half","brick_gutter":18,"borders":false,"bg_color":"","preload_image":false,"width":"wrapper","padding_top":36,"padding_bottom":36}},"section_columns_DjCYUV":{"type":"section-columns","blocks":{"text_block_LPTYX4":{"type":"text_block","settings":{"enable_image":true,"image":"shopify:\/\/shop_images\/NUESTRA_HISTORIA.webp","title":"NUESTRA HISTORIA","text":"<p>Nacida en 2012, nuestra marca ha crecido y evolucionado, acá te contamos más.<\/p>","button_label":"","button_link":"https:\/\/froens.cl\/pages\/historia","button_color":"btn--neutral","button_style":"btn--soft","enable_video":false,"video_link":"https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc"}},"text_block_UdmgLQ":{"type":"text_block","settings":{"enable_image":true,"image":"shopify:\/\/shop_images\/LIFESTYLE.webp","title":"LIFESTYLE","text":"<p>Vida al aire libre, playa, amigos. Te mostramos lo que nos inspira y motiva.<\/p>","button_label":"","button_link":"shopify:\/\/pages\/estilo-de-vida","button_color":"btn--neutral","button_style":"btn--soft","enable_video":false,"video_link":"https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc"}},"text_block_8qCd9f":{"type":"text_block","settings":{"enable_image":true,"image":"shopify:\/\/shop_images\/EQUIPO.webp","title":"NUESTRO EQUIPO","text":"<p>Nos esforzamos por mejorar cada día, gracias a un tremendo equipo de colaboradores.<\/p>","button_label":"","button_link":"https:\/\/froens.cl\/pages\/nuestro-equipo","button_color":"btn--neutral","button_style":"btn--soft","enable_video":false,"video_link":"https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc"}},"text_block_PdaNj3":{"type":"text_block","settings":{"enable_image":true,"image":"shopify:\/\/shop_images\/RESPONSABILIDAD_NOSOTROS.webp","title":"RESPONSABILIDAD","text":"<p>Buscamos ser una marca consciente y responsable, compremetidos a mejorar día a día.<\/p>","button_label":"","button_link":"shopify:\/\/pages\/responsabilidad","button_color":"btn--neutral","button_style":"btn--soft","enable_video":false,"video_link":"https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc"}},"text_block_xzyWRX":{"type":"text_block","settings":{"enable_image":true,"image":"shopify:\/\/shop_images\/INNOVACION.webp","title":"SIEMPRE A LA VANGUARDIA","text":"<p>La innovación es parte de nuestro sello, mira todo lo que hemos logrado<\/p>","button_label":"","button_link":"https:\/\/froens.cl\/pages\/innovacion-y-vanguardia","button_color":"btn--neutral","button_style":"btn--soft","enable_video":false,"video_link":"https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc"}},"text_block_CKTcxg":{"type":"text_block","settings":{"enable_image":true,"image":"shopify:\/\/shop_images\/TIENDAS_NOSOTROS.webp","title":"NUESTRAS TIENDAS","text":"<p>Lugares que son como nuestra casa, te invitamos a conocerlas.<\/p>","button_label":"","button_link":"shopify:\/\/pages\/casas-froens","button_color":"btn--neutral","button_style":"btn--soft","enable_video":false,"video_link":"https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc"}}},"block_order":["text_block_LPTYX4","text_block_UdmgLQ","text_block_8qCd9f","text_block_PdaNj3","text_block_xzyWRX","text_block_CKTcxg"],"settings":{"title":"CONOCE MÁS DE NOSOTROS","bg":"palette--light bg--neutral","align_text":"text-center","scale_image":true,"wh_ratio":1,"grid_large":3,"grid_medium":3,"grid_mobile":1.2,"progress_bar_mobile":false,"width":"wrapper","padding_top":36,"padding_bottom":36}},"533f1a0c-2c1e-40b4-913f-5d3b29479e40":{"type":"section-double","blocks":{"template--16757317304532__533f1a0c-2c1e-40b4-913f-5d3b29479e40-text-1":{"type":"text","settings":{"kicker":"Image with text","title":"","text":"<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.<\/p>","font_size":5,"text_columns":1,"align_text":"text-left","button_text":"","button_url":"","button_color":"btn--neutral","button_style":"btn-text-thick-line","text_color":"text--neutral","bg_color":""}},"template--16757317304532__533f1a0c-2c1e-40b4-913f-5d3b29479e40-image-1":{"type":"image","settings":{"overlay_opacity":15,"overlay_color":"#000000","enable_overlay_text":false,"kicker":"","title":"","richtext":"","text_align":"align--middle-center","text_color":"text--white","link_text":"Shop Now","link":"","button_color":"btn--white","button_style":"btn"}}},"block_order":["template--16757317304532__533f1a0c-2c1e-40b4-913f-5d3b29479e40-text-1","template--16757317304532__533f1a0c-2c1e-40b4-913f-5d3b29479e40-image-1"],"disabled":true,"settings":{"height":"use_screen_one_half","brick_gutter":0,"borders":false,"bg_color":"","preload_image":false,"width":"wrapper","padding_top":36,"padding_bottom":36}},"da1eb720-d4c9-40f1-b0a5-05f14d3a1467":{"type":"section-video-player","disabled":true,"settings":{"video_link":"https:\/\/www.youtube.com\/watch?v=EebOwDb1Lf8","width":"wrapper","padding_top":36,"padding_bottom":36}}},"order":["main","24998283-74d4-4f30-bbcc-ce03997ac2e5","7854c8a7-d60b-4f16-84c1-852f78d66c8a","ee306a96-ae3c-4c9e-83a0-b668243a50b3","section_double_DHiDNe","section_columns_DjCYUV","533f1a0c-2c1e-40b4-913f-5d3b29479e40","da1eb720-d4c9-40f1-b0a5-05f14d3a1467"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "page",
+      "disabled": true,
+      "settings": {
+        "kicker": "SOBRE NOSOTROS",
+        "kicker_size": 3,
+        "show_title": true,
+        "title_size": 8,
+        "show_content": true,
+        "content_size": 5,
+        "align_text": "text-left",
+        "text_color": "text--neutral",
+        "bg": "palette--light bg--neutral",
+        "width": "wrapper",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "24998283-74d4-4f30-bbcc-ce03997ac2e5": {
+      "type": "section-hero",
+      "blocks": {
+        "template--16757317304532__24998283-74d4-4f30-bbcc-ce03997ac2e5-kicker-1": {
+          "type": "kicker",
+          "settings": {
+            "kicker": "",
+            "enable_line": false,
+            "text_size": 4
+          }
+        },
+        "template--16757317304532__24998283-74d4-4f30-bbcc-ce03997ac2e5-heading-1": {
+          "type": "heading",
+          "settings": {
+            "title": "",
+            "text_size": 10
+          }
+        },
+        "template--16757317304532__24998283-74d4-4f30-bbcc-ce03997ac2e5-text-1": {
+          "type": "text",
+          "settings": {
+            "richtext": "",
+            "text_size": 6
+          }
+        },
+        "template--16757317304532__24998283-74d4-4f30-bbcc-ce03997ac2e5-button-1": {
+          "type": "button",
+          "disabled": true,
+          "settings": {
+            "link_text_1": "View products",
+            "link_1": "",
+            "button_size_1": "btn--long",
+            "button_style_1": "btn",
+            "button_color_1": "btn--white",
+            "link_text_2": "Learn more",
+            "link_2": "",
+            "button_size_2": "btn--long",
+            "button_style_2": "btn-text-thick-line",
+            "button_color_2": "btn--white",
+            "link_text_3": "",
+            "link_3": "",
+            "button_size_3": "btn--long",
+            "button_style_3": "btn-text-thick-line",
+            "button_color_3": "btn--white"
+          }
+        }
+      },
+      "block_order": [
+        "template--16757317304532__24998283-74d4-4f30-bbcc-ce03997ac2e5-kicker-1",
+        "template--16757317304532__24998283-74d4-4f30-bbcc-ce03997ac2e5-heading-1",
+        "template--16757317304532__24998283-74d4-4f30-bbcc-ce03997ac2e5-text-1",
+        "template--16757317304532__24998283-74d4-4f30-bbcc-ce03997ac2e5-button-1"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/banners-01.jpg",
+        "height": "use_screen_two_thirds",
+        "overlay_opacity": 15,
+        "overlay_color": "#000000",
+        "enable_overlay_text": false,
+        "preload_image": false,
+        "content_width": 2000,
+        "text_align": "align--middle-center",
+        "text_color": "text--white",
+        "color_bg": "hero__content--transparent",
+        "width": "wrapper--none",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "7854c8a7-d60b-4f16-84c1-852f78d66c8a": {
+      "type": "section-gallery-text",
+      "blocks": {
+        "template--16757317304532__7854c8a7-d60b-4f16-84c1-852f78d66c8a-text-1": {
+          "type": "text",
+          "settings": {
+            "title": "Custom Text",
+            "title_size": 3,
+            "text": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>",
+            "body_size": 4,
+            "text_align": "text-left"
+          }
+        }
+      },
+      "block_order": [
+        "template--16757317304532__7854c8a7-d60b-4f16-84c1-852f78d66c8a-text-1"
+      ],
+      "disabled": true,
+      "settings": {
+        "bg": "palette--light bg--neutral",
+        "grid_large": 1,
+        "grid_medium": 1,
+        "grid_mobile": 1,
+        "width": "wrapper",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "ee306a96-ae3c-4c9e-83a0-b668243a50b3": {
+      "type": "section-richtext",
+      "blocks": {
+        "template--16757317304532__ee306a96-ae3c-4c9e-83a0-b668243a50b3-kicker-1": {
+          "type": "kicker",
+          "disabled": true,
+          "settings": {
+            "kicker": "Introducing",
+            "enable_line": true,
+            "text_size": 4
+          }
+        },
+        "heading_C86Nqp": {
+          "type": "heading",
+          "disabled": true,
+          "settings": {
+            "heading": "Creamos ropa consciente y duradera para acompañarte en tu día a día.",
+            "text_size": 8
+          }
+        },
+        "template--16757317304532__ee306a96-ae3c-4c9e-83a0-b668243a50b3-heading-1": {
+          "type": "heading",
+          "settings": {
+            "heading": "Este es nuestro propósito y lo que nos motiva a seguir avanzando. Compartir con los amigos y disfrutar de la naturaleza nos inspira a crear productos con el menor impacto posible y que perduren en el tiempo, con un estilo atemporal, enfocándonos en la calidad de las fibras, un buen diseño y el mejor calce.",
+            "text_size": 4
+          }
+        },
+        "template--16757317304532__ee306a96-ae3c-4c9e-83a0-b668243a50b3-text-1": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "text": "<p>Compartir con los amigos y disfrutar de la naturaleza es lo que nos inspira a fabricar productos con el menor impacto posible y que perdurarán en el tiempo.</p>",
+            "text_size": 4,
+            "text_columns": 1
+          }
+        },
+        "template--16757317304532__ee306a96-ae3c-4c9e-83a0-b668243a50b3-button-1": {
+          "type": "button",
+          "disabled": true,
+          "settings": {
+            "link_text_1": "Shop all",
+            "link_1": "shopify://collections/all",
+            "button_size_1": "btn--medium",
+            "button_style_1": "btn-text-thick-line",
+            "button_color_1": "btn--neutral",
+            "link_text_2": "",
+            "link_2": "",
+            "button_size_2": "btn--medium",
+            "button_style_2": "btn-text-thick-line",
+            "button_color_2": "btn--neutral",
+            "link_text_3": "",
+            "link_3": "",
+            "button_size_3": "btn--long",
+            "button_style_3": "btn-text-thick-line",
+            "button_color_3": "btn--white"
+          }
+        }
+      },
+      "block_order": [
+        "template--16757317304532__ee306a96-ae3c-4c9e-83a0-b668243a50b3-kicker-1",
+        "heading_C86Nqp",
+        "template--16757317304532__ee306a96-ae3c-4c9e-83a0-b668243a50b3-heading-1",
+        "template--16757317304532__ee306a96-ae3c-4c9e-83a0-b668243a50b3-text-1",
+        "template--16757317304532__ee306a96-ae3c-4c9e-83a0-b668243a50b3-button-1"
+      ],
+      "settings": {
+        "align_text": "text-left",
+        "text_color": "text--white",
+        "bg": "palette--bright bg--bright--accent",
+        "content_width": 2000,
+        "width": "wrapper",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "section_double_DHiDNe": {
+      "type": "section-double",
+      "blocks": {
+        "text_FCnJUw": {
+          "type": "text",
+          "settings": {
+            "kicker": "SOMOS FROENS",
+            "title": "",
+            "text": "<p>Fue en 2012 cuando 3 amigos tuvieron una idea: crear una marca de ropa que no fuera una más del montón, si no una que representara el estilo de vida que los identificaba y que se destacara por sobre las otras por su diseño, calidad y propósito. </p><p>Así fue como nació Froens, una marca inspirada en la naturaleza y la vida al aire libre, para compañarte en tu día a día.</p>",
+            "font_size": 5,
+            "text_columns": 1,
+            "align_text": "text-left",
+            "button_text": "",
+            "button_url": "",
+            "button_color": "btn--neutral",
+            "button_style": "btn-text-thick-line",
+            "text_color": "text--neutral",
+            "bg_color": ""
+          }
+        },
+        "image_3gi8Xa": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/bajada_parte_principal.jpg",
+            "overlay_opacity": 0,
+            "overlay_color": "#ffffff",
+            "enable_overlay_text": false,
+            "kicker": "",
+            "title": "",
+            "richtext": "",
+            "text_align": "align--middle-center",
+            "text_color": "text--white",
+            "link_text": "",
+            "link": "",
+            "button_color": "btn--white",
+            "button_style": "btn"
+          }
+        }
+      },
+      "block_order": [
+        "text_FCnJUw",
+        "image_3gi8Xa"
+      ],
+      "settings": {
+        "height": "use_screen_one_half",
+        "brick_gutter": 18,
+        "borders": false,
+        "bg_color": "",
+        "preload_image": false,
+        "width": "wrapper",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "section_columns_DjCYUV": {
+      "type": "section-columns",
+      "blocks": {
+        "text_block_LPTYX4": {
+          "type": "text_block",
+          "settings": {
+            "enable_image": true,
+            "image": "shopify://shop_images/NUESTRA_HISTORIA.webp",
+            "title": "NUESTRA HISTORIA",
+            "text": "<p>Nacida en 2012, nuestra marca ha crecido y evolucionado, acá te contamos más.</p>",
+            "button_label": "",
+            "button_link": "https://froens.cl/pages/historia",
+            "button_color": "btn--neutral",
+            "button_style": "btn--soft",
+            "enable_video": false,
+            "video_link": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
+          }
+        },
+        "text_block_UdmgLQ": {
+          "type": "text_block",
+          "settings": {
+            "enable_image": true,
+            "image": "shopify://shop_images/LIFESTYLE.webp",
+            "title": "LIFESTYLE",
+            "text": "<p>Vida al aire libre, playa, amigos. Te mostramos lo que nos inspira y motiva.</p>",
+            "button_label": "",
+            "button_link": "shopify://pages/estilo-de-vida",
+            "button_color": "btn--neutral",
+            "button_style": "btn--soft",
+            "enable_video": false,
+            "video_link": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
+          }
+        },
+        "text_block_8qCd9f": {
+          "type": "text_block",
+          "settings": {
+            "enable_image": true,
+            "image": "shopify://shop_images/EQUIPO.webp",
+            "title": "NUESTRO EQUIPO",
+            "text": "<p>Nos esforzamos por mejorar cada día, gracias a un tremendo equipo de colaboradores.</p>",
+            "button_label": "",
+            "button_link": "https://froens.cl/pages/nuestro-equipo",
+            "button_color": "btn--neutral",
+            "button_style": "btn--soft",
+            "enable_video": false,
+            "video_link": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
+          }
+        },
+        "text_block_PdaNj3": {
+          "type": "text_block",
+          "settings": {
+            "enable_image": true,
+            "image": "shopify://shop_images/RESPONSABILIDAD_NOSOTROS.webp",
+            "title": "RESPONSABILIDAD",
+            "text": "<p>Buscamos ser una marca consciente y responsable, compremetidos a mejorar día a día.</p>",
+            "button_label": "",
+            "button_link": "shopify://pages/responsabilidad",
+            "button_color": "btn--neutral",
+            "button_style": "btn--soft",
+            "enable_video": false,
+            "video_link": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
+          }
+        },
+        "text_block_xzyWRX": {
+          "type": "text_block",
+          "settings": {
+            "enable_image": true,
+            "image": "shopify://shop_images/INNOVACION.webp",
+            "title": "SIEMPRE A LA VANGUARDIA",
+            "text": "<p>La innovación es parte de nuestro sello, mira todo lo que hemos logrado</p>",
+            "button_label": "",
+            "button_link": "https://froens.cl/pages/innovacion-y-vanguardia",
+            "button_color": "btn--neutral",
+            "button_style": "btn--soft",
+            "enable_video": false,
+            "video_link": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
+          }
+        },
+        "text_block_CKTcxg": {
+          "type": "text_block",
+          "settings": {
+            "enable_image": true,
+            "image": "shopify://shop_images/TIENDAS_NOSOTROS.webp",
+            "title": "NUESTRAS TIENDAS",
+            "text": "<p>Lugares que son como nuestra casa, te invitamos a conocerlas.</p>",
+            "button_label": "",
+            "button_link": "shopify://pages/tiendas-froens",
+            "button_color": "btn--neutral",
+            "button_style": "btn--soft",
+            "enable_video": false,
+            "video_link": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
+          }
+        }
+      },
+      "block_order": [
+        "text_block_LPTYX4",
+        "text_block_UdmgLQ",
+        "text_block_8qCd9f",
+        "text_block_PdaNj3",
+        "text_block_xzyWRX",
+        "text_block_CKTcxg"
+      ],
+      "settings": {
+        "title": "CONOCE MÁS DE NOSOTROS",
+        "bg": "palette--light bg--neutral",
+        "align_text": "text-center",
+        "scale_image": true,
+        "wh_ratio": 1,
+        "grid_large": 3,
+        "grid_medium": 3,
+        "grid_mobile": 1.2,
+        "progress_bar_mobile": false,
+        "width": "wrapper",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "533f1a0c-2c1e-40b4-913f-5d3b29479e40": {
+      "type": "section-double",
+      "blocks": {
+        "template--16757317304532__533f1a0c-2c1e-40b4-913f-5d3b29479e40-text-1": {
+          "type": "text",
+          "settings": {
+            "kicker": "Image with text",
+            "title": "",
+            "text": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>",
+            "font_size": 5,
+            "text_columns": 1,
+            "align_text": "text-left",
+            "button_text": "",
+            "button_url": "",
+            "button_color": "btn--neutral",
+            "button_style": "btn-text-thick-line",
+            "text_color": "text--neutral",
+            "bg_color": ""
+          }
+        },
+        "template--16757317304532__533f1a0c-2c1e-40b4-913f-5d3b29479e40-image-1": {
+          "type": "image",
+          "settings": {
+            "overlay_opacity": 15,
+            "overlay_color": "#000000",
+            "enable_overlay_text": false,
+            "kicker": "",
+            "title": "",
+            "richtext": "",
+            "text_align": "align--middle-center",
+            "text_color": "text--white",
+            "link_text": "Shop Now",
+            "link": "",
+            "button_color": "btn--white",
+            "button_style": "btn"
+          }
+        }
+      },
+      "block_order": [
+        "template--16757317304532__533f1a0c-2c1e-40b4-913f-5d3b29479e40-text-1",
+        "template--16757317304532__533f1a0c-2c1e-40b4-913f-5d3b29479e40-image-1"
+      ],
+      "disabled": true,
+      "settings": {
+        "height": "use_screen_one_half",
+        "brick_gutter": 0,
+        "borders": false,
+        "bg_color": "",
+        "preload_image": false,
+        "width": "wrapper",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "da1eb720-d4c9-40f1-b0a5-05f14d3a1467": {
+      "type": "section-video-player",
+      "disabled": true,
+      "settings": {
+        "video_link": "https://www.youtube.com/watch?v=EebOwDb1Lf8",
+        "width": "wrapper",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "main",
+    "24998283-74d4-4f30-bbcc-ce03997ac2e5",
+    "7854c8a7-d60b-4f16-84c1-852f78d66c8a",
+    "ee306a96-ae3c-4c9e-83a0-b668243a50b3",
+    "section_double_DHiDNe",
+    "section_columns_DjCYUV",
+    "533f1a0c-2c1e-40b4-913f-5d3b29479e40",
+    "da1eb720-d4c9-40f1-b0a5-05f14d3a1467"
+  ]
+}
