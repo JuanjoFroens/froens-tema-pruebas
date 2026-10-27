@@ -331,7 +331,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   {%- endcomment -%}
   <script>
     window.gaea = window.gaea || {};
-    window.gaea.isCollection = {{ template contains 'collection' | json }};
+    window.gaea.isCollection = {{ template | json }};
   </script>
   <script src="{{ 'custom-gaea.js' | asset_url }}" defer="defer"></script>
 
@@ -404,3 +404,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 </body>
 </html>
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{{ template contains 'collection' | json }}"
+  to: "{{ template | json }}"
+  position: 13603..13624
+{% endcomment %}
